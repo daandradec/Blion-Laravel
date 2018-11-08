@@ -1,13 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Apis\User;
+namespace App\Http\Controllers\Apis\User\Traits;
 
-use Illuminate\Http\Request;
-use Traits\ImageUserTraitApi;
 
-class UsersControllerApi extends Controller
-{
-    use ImageUserTraitApi;
+
+trait ImageUserTraitApi{
 
     public function image($id){        
         return Image::make(Storage::get(User::findOrFail($id)->avatar))->response();        
@@ -34,11 +31,5 @@ class UsersControllerApi extends Controller
         return response()->json(['sucess' => "agregado"]);
     }
 
-    public function index($id){
-        $user = User::find($id);
-        $success = $user !== null;
-        if(!$success)
-            return response()->json(['success' => false,'name' => '','email' => '']);
-        return response()->json(['success' => $success,'name' => $user->name,'email' => $user->email]);
-    }
 }
+?>
