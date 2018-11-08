@@ -21,13 +21,14 @@
 
             <div class="form-group">
                 <label for="password" class="float-left">Password</label>
-                <input type="password" name="password" class="form-control" required>
+                <input type="password" name="password" class="form-control {{$errors->has('password') ? ' is-invalid' : ''}}" value="{{old('email')}}" required>
+                {!!$errors->first('password','<span class="error invalid-feedback">:message</span>')!!}
             </div>
 
             <div class="form-group">
-                    <label for="password_confirmation" class="float-left">Password Confirm</label>
-                    <input type="password" name="password_confirmation" class="form-control" required>
-                </div>
+                <label for="password_confirmation" class="float-left {{$errors->has('password') ? ' is-invalid' : ''}}" value="{{old('email')}}">Password Confirm</label>
+                <input type="password" name="password_confirmation" class="form-control" required>
+            </div>
 
             <input type="submit" class="btn btn-lg btn-success" value="Login">
         </form>

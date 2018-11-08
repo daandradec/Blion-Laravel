@@ -19,3 +19,16 @@ Route::post('/admin/login','Web\Admin\AdminLoginController@login');
 Route::get('/admin/register','Web\Admin\AdminRegisterController@showRegistrationForm')->name('admin.register');
 Route::post('/admin/register','Web\Admin\AdminRegisterController@register');
 
+
+/* APIS */
+
+Route::get('/api/users/{id}/image','Apis\User\UsersControllerApi@image');
+Route::post('/api/users/{id}/image','Apis\User\UsersControllerApi@postImage');
+
+Route::get('/api/users/{id}','Apis\User\UsersControllerApi@index');
+
+
+Route::post('/api/login','Apis\Auth\LoginControllerApi@login');
+Route::post('/api/register','Apis\Auth\RegisterControllerApi@register');
+
+/** ********************** **/

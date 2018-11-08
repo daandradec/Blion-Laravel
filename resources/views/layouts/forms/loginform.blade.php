@@ -10,7 +10,7 @@
             <div class="form-group">
                 <label for="email" class="float-left">Email</label>
                 <input type="email" name="email" class="form-control" placeholder="email@mail.com" required>
-                {!!$errors->first('email','<span class=error>:message</span>')!!}
+                {!!$errors->first('email','<span class="error">:message</span>')!!}
             </div>
 
             <div class="form-group">

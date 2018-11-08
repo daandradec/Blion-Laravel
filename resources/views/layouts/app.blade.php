@@ -21,6 +21,9 @@
             width:100% !important;
             height:100% !important;
         }
+        .error{
+            color: #FF1111;
+        }
     </style>
 </head>
 <body>
