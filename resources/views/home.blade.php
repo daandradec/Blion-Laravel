@@ -16,6 +16,7 @@
 
                     You are logged in!
                     <br>
+                    <img src="{{Storage::url(auth()->user()->avatar)}}" width="300px">
                     {{--<a href="{{route('users.show',auth()->user()->id)}}" class="btn btn-success">My User</a>--}}
                 </div>
             </div>
