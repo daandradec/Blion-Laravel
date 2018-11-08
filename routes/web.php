@@ -22,12 +22,11 @@ Route::post('/admin/register','Web\Admin\AdminRegisterController@register');
 
 /* APIS */
 
+/** User */
 Route::get('/api/users/{id}/image','Apis\User\UsersControllerApi@image');
 Route::post('/api/users/{id}/image','Apis\User\UsersControllerApi@postImage');
-
 Route::get('/api/users/{id}','Apis\User\UsersControllerApi@index');
-
-
+/** Login */
 Route::post('/api/login','Apis\Auth\LoginControllerApi@login');
 Route::post('/api/register','Apis\Auth\RegisterControllerApi@register');
 

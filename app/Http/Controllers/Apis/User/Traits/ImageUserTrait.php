@@ -7,7 +7,7 @@ use Intervention\Image\Facades\Image;
 use Illuminate\Http\Request;
 use App\User;
 
-trait ImageUserTraitApi{
+trait ImageUserTrait{
 
     public function image($id){        
         return Image::make(Storage::get(User::findOrFail($id)->avatar))->response();        

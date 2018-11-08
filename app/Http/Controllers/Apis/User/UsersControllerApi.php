@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Apis\User;
 
+use App\Http\Controllers\Apis\User\Traits\ImageUserTrait;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Traits\ImageUserTraitApi;
+use App\User;
 
 class UsersControllerApi extends Controller
 {
-    use ImageUserTraitApi;
+    use ImageUserTrait;
 
     public function index($id){
         $user = User::find($id);
