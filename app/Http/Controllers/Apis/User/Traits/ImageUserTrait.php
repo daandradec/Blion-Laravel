@@ -9,8 +9,9 @@ use App\User;
 
 trait ImageUserTrait{
 
-    public function image($id){        
-        return Image::make(Storage::get(User::findOrFail($id)->avatar))->response();        
+    public function image($id){    
+        return User::findOrFail($id)->avatar;
+        //return Image::make(Storage::get(User::findOrFail($id)->avatar))->response();        
     }
 
     public function postImage(Request $request,$id){
