@@ -23,12 +23,12 @@ trait ImageUserTrait{
 
         Storage::put('/public/foo.png',base64_decode($str_img));
 
-        $path = Storage::putFile('public',new File( public_path(Storage::url('public/foo.png')) ));
+        $path = Storage::putFile('public/Users',new File( public_path(Storage::url('public/foo.png')) ));
 
         Storage::delete('public/foo.png');
 
         $user = User::findOrFail($id);
-        if(strcmp($user->avatar,"public/no-avatar.jpg"))
+        if(strcmp($user->avatar,"public/Users/no-avatar.jpg"))
             Storage::delete($user->avatar);
         $user->avatar = $path;
         $user->save();
