@@ -10,7 +10,7 @@ use App\User;
 trait ImageUserTrait{
 
     public function image($id){    
-        return User::findOrFail($id)->avatar;
+        return response()->json(["a"=>User::findOrFail($id)->avatar,"b"=>Storage::url(User::findOrFail($id)->avatar),"c"=>storage_path()]);
         //return Image::make(Storage::get(User::findOrFail($id)->avatar))->response();        
     }
 
