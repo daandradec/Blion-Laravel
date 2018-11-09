@@ -9,9 +9,7 @@ use App\User;
 
 trait ImageUserTrait{
 
-    public function image($id){    
-        //return response()->json(["a"=>User::findOrFail($id)->avatar,"b"=>Storage::url(User::findOrFail($id)->avatar),"c"=>storage_path()]);
-        //dd(Storage::get(User::findOrFail($id)->avatar));
+    public function image($id){            
         return Image::make(Storage::get(User::findOrFail($id)->avatar))->response();        
     }
 
@@ -21,13 +19,15 @@ trait ImageUserTrait{
         $str_img = str_replace(@"%2F","/",$str_img);
         $str_img = str_replace(@"%3D","=",$str_img);
 
+        $user = User::findOrFail($id);
+
         Storage::put('/public/foo.png',base64_decode($str_img));
 
-        $path = Storage::putFile('public/Users',new File( public_path(Storage::url('public/foo.png')) ));
+        $path = Storage::putFile('public/Users/'.$user->email,new File( public_path(Storage::url('public/foo.png')) ));
 
         Storage::delete('public/foo.png');
 
-        $user = User::findOrFail($id);
+        
         if(strcmp($user->avatar,"public/Users/no-avatar.jpg"))
             Storage::delete($user->avatar);
         $user->avatar = $path;
