@@ -23,12 +23,10 @@ trait ImageUserTrait{
         $user = User::findOrFail($id);
 
 
-        Storage::put('public/foo.png',base64_decode($str_img));
+        Storage::put('/public/foo.png',base64_decode($str_img));
         
 
         $path = Storage::putFile('public/Users/'.$user->email,new File( public_path(Storage::url('public/foo.png')) ));
-
-        return response()->json(['sucess' => $path]);
 
         Storage::delete('public/foo.png');
 
