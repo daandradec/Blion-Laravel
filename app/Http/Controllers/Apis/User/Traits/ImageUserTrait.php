@@ -14,7 +14,7 @@ trait ImageUserTrait{
     }
 
     public function postImage(Request $request,$id){        
-        $request->file('file')->store('public/Users/');
+        $request->file('file')->store('public/Users');
         /*
         $str_img = $request->input('file');
         $str_img = str_replace(@"%2B","+",$str_img);
