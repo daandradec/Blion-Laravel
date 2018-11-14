@@ -13,8 +13,7 @@ trait ImageUserTrait{
         return Image::make(Storage::get(User::findOrFail($id)->avatar))->response();        
     }
 
-    public function postImage(Request $request,$id){
-        return response()->json(['sucess' => $request->input('file')]);
+    public function postImage(Request $request,$id){        
 
         $str_img = $request->input('file');
         $str_img = str_replace(@"%2B","+",$str_img);
@@ -22,6 +21,8 @@ trait ImageUserTrait{
         $str_img = str_replace(@"%3D","=",$str_img);
 
         $user = User::findOrFail($id);
+
+        return response()->json(['sucess' => $user->id]);
 
         Storage::put('public/foo.png',base64_decode($str_img));
 
