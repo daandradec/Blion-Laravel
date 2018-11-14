@@ -24,7 +24,7 @@ Route::post('/admin/register','Web\Admin\AdminRegisterController@register');
 
 /** User */
 Route::get('/api/users/{id}/image','Apis\User\UsersControllerApi@image');
-Route::post('/api/users/{id}/image','Apis\User\UsersControllerApi@postImage');
+Route::post('/api/users/{id}/image','Apis\User\UsersControllerApi@postImage')->name('image');
 Route::get('/api/users/{id}','Apis\User\UsersControllerApi@index');
 /** Login */
 Route::post('/api/login','Apis\Auth\LoginControllerApi@login');

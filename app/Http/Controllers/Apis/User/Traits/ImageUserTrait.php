@@ -14,12 +14,13 @@ trait ImageUserTrait{
     }
 
     public function postImage(Request $request,$id){        
-
+        dd($request);
+        /*
         $str_img = $request->input('file');
         $str_img = str_replace(@"%2B","+",$str_img);
         $str_img = str_replace(@"%2F","/",$str_img);
         $str_img = str_replace(@"%3D","=",$str_img);
-
+        */
         //$user = User::findOrFail($id);
 
 

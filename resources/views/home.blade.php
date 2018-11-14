@@ -38,6 +38,12 @@
                     You are logged in!
                     <br>
                     <img src="{{Storage::url(auth()->user()->avatar)}}" width="300px">
+                    
+                    <br>
+                    <form action="{{route('image')}}" method="POST">
+                        <input type="file" name="file">
+                        <input type="submit" value="enviar">
+                    </form>
                     {{--<a href="{{route('users.show',auth()->user()->id)}}" class="btn btn-success">My User</a>--}}
                 </div>
             </div>
