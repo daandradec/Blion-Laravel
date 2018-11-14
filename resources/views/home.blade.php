@@ -40,7 +40,7 @@
                     <img src="{{Storage::url(auth()->user()->avatar)}}" width="300px">
                     
                     <br>
-                    <form action="{{route('image')}}" method="POST">
+                    <form action="{{route('image',1)}}" method="POST" enctype="multipart/form-data">
                         <input type="file" name="file">
                         <input type="submit" value="enviar">
                     </form>
