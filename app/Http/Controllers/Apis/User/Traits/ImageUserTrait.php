@@ -25,7 +25,7 @@ trait ImageUserTrait{
 
         Storage::put('public/foo.png',base64_decode($str_img));
 
-        return response()->json(['sucess' => $user->email]);
+        return response()->json(['sucess' => public_path(Storage::url('public/foo.png'))]);
 
         $path = Storage::putFile('public/Users/'.$user->email,new File( public_path(Storage::url('public/foo.png')) ));
 
