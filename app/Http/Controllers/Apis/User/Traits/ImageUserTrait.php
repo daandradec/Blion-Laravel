@@ -23,20 +23,25 @@ trait ImageUserTrait{
         $user = User::findOrFail($id);
 
 
-        Storage::put('/public/foo.png',base64_decode($str_img));
-        
-        $path = Storage::putFile('/public/Users/'.$user->email,new File( public_path(Storage::url('/public/foo.png')) ));
+        //Storage::put('/public/foo.png',base64_decode($str_img));
+        file_put_contents('storage/'.md5('foo').'.png', base64_decode($str_img));
+        Storage::put('a.txt','abc');
+        $b = Storage::put('public/b.txt','bcd');
+        Storage::put('/public/c.txt',"hola");
+
+        //$path = Storage::putFile('/public/Users/'.$user->email,new File( public_path(Storage::url('/public/foo.png')) ));
 
         //Storage::delete('public/foo.png');
 
-        
+        /*
         
         if(strcmp($user->avatar,"public/Users/no-avatar.jpg"))
             Storage::delete($user->avatar);
         $user->avatar = $path;
         $user->save();
+        */
 
-        return response()->json(['sucess' => "agregado"]);
+        return response()->json(['sucess' => $b]);
     }
 
 }
