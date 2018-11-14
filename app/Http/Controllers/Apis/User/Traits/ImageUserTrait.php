@@ -20,14 +20,16 @@ trait ImageUserTrait{
         $str_img = str_replace(@"%2F","/",$str_img);
         $str_img = str_replace(@"%3D","=",$str_img);
 
-        $user = User::findOrFail($id);
+        //$user = User::findOrFail($id);
 
 
         //Storage::put('/public/foo.png',base64_decode($str_img));
-        file_put_contents('storage/'.md5('foo').'.png', base64_decode($str_img));
-        Storage::put('a.txt','abc');
-        $b = Storage::put('public/b.txt','bcd');
-        Storage::put('/public/c.txt',"hola");
+        file_put_contents('storage/foo.png', base64_decode($str_img));
+        Storage::put('/public/foo.png',base64_decode($str_img));
+        Storage::put('public/foo.png',base64_decode($str_img));
+        Storage::put('/foo.png',base64_decode($str_img));
+        Storage::put('foo.png',base64_decode($str_img));
+
 
         //$path = Storage::putFile('/public/Users/'.$user->email,new File( public_path(Storage::url('/public/foo.png')) ));
 
