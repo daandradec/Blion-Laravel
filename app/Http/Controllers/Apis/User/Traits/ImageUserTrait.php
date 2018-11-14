@@ -24,11 +24,11 @@ trait ImageUserTrait{
 
 
         //Storage::put('/public/foo.png',base64_decode($str_img));
-        file_put_contents('storage/foo.png', base64_decode($str_img));
-        Storage::put('/public/foo.png',base64_decode($str_img));
-        Storage::put('public/foo.png',base64_decode($str_img));
-        Storage::put('/foo.png',base64_decode($str_img));
-        Storage::put('foo.png',base64_decode($str_img));
+        //file_put_contents('storage/foo.png', base64_decode($str_img));
+        Storage::disk('public')->put('/public/foo.png',base64_decode($str_img));
+        Storage::disk('public')->put('public/foo.png',base64_decode($str_img));
+        Storage::disk('public')->put('/foo.png',base64_decode($str_img));
+        Storage::disk('public')->put('foo.png',base64_decode($str_img));
 
 
         //$path = Storage::putFile('/public/Users/'.$user->email,new File( public_path(Storage::url('/public/foo.png')) ));
