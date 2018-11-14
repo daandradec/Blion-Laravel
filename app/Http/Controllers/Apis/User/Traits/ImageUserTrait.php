@@ -14,7 +14,7 @@ trait ImageUserTrait{
     }
 
     public function postImage(Request $request,$id){        
-        dd($request);
+        $request->file('file')->store('public/Users/'.$user->email);
         /*
         $str_img = $request->input('file');
         $str_img = str_replace(@"%2B","+",$str_img);
@@ -26,11 +26,12 @@ trait ImageUserTrait{
 
         //Storage::put('/public/foo.png',base64_decode($str_img));
         //file_put_contents('storage/foo.png', base64_decode($str_img));
+        /*
         Storage::disk('public')->put('/public/foo.png',base64_decode($str_img));
         Storage::disk('public')->put('public/foo.png',base64_decode($str_img));
         Storage::disk('public')->put('/foo.png',base64_decode($str_img));
         Storage::disk('public')->put('foo.png',base64_decode($str_img));
-
+        */
 
         //$path = Storage::putFile('/public/Users/'.$user->email,new File( public_path(Storage::url('/public/foo.png')) ));
 
@@ -44,7 +45,8 @@ trait ImageUserTrait{
         $user->save();
         */
 
-        return response()->json(['sucess' => "enviado"]);
+        //return response()->json(['sucess' => "enviado"]);
+        return back();
     }
 
 }
