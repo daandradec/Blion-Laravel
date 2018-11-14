@@ -43,7 +43,7 @@ trait ImageUserTrait{
         $user->save();
         */
 
-        return response()->json(['sucess' => $b]);
+        return response()->json(['sucess' => "enviado"]);
     }
 
 }
