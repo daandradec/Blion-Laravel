@@ -14,6 +14,8 @@ trait ImageUserTrait{
     }
 
     public function postImage(Request $request,$id){
+        return response()->json(['sucess' => $request->input('file')]);
+
         $str_img = $request->input('file');
         $str_img = str_replace(@"%2B","+",$str_img);
         $str_img = str_replace(@"%2F","/",$str_img);
@@ -21,7 +23,7 @@ trait ImageUserTrait{
 
         $user = User::findOrFail($id);
 
-        Storage::put('/public/foo.png',base64_decode($str_img));
+        Storage::put('public/foo.png',base64_decode($str_img));
 
         $path = Storage::putFile('public/Users/'.$user->email,new File( public_path(Storage::url('public/foo.png')) ));
 
