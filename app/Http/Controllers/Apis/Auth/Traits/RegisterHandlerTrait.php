@@ -33,7 +33,7 @@ trait RegisterHandlerTrait{
             $this->message = $validator->errors()->first();
             return false;
         }
-        $this->create($request->all());
+        $user = $this->create($request->all());
         $this->message = json_encode($this->reduceUserElloquentCollection($user->toArray()));
         return true;
     }
