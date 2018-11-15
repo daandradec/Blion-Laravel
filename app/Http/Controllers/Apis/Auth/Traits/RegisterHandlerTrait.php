@@ -33,9 +33,17 @@ trait RegisterHandlerTrait{
             $this->message = $validator->errors()->first();
             return false;
         }
-        //$this->create($request->all());
-        $this->message = '';
+        $this->create($request->all());
+        $this->message = json_encode($this->reduceUserElloquentCollection($user->toArray()));
         return true;
+    }
+
+    private function reduceUserElloquentCollection($array){
+        unset($array["email_verified_at"]);
+        unset($array['created_at']);
+        unset($array['updated_at']);
+        unset($array['avatar']);
+        return $array;
     }
 }
 

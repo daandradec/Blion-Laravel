@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Apis\User\Traits;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 use Illuminate\Http\Request;
+use Illuminate\Http\File;
 use App\User;
 
 trait ImageUserTrait{
@@ -15,38 +16,29 @@ trait ImageUserTrait{
 
     public function postImage(Request $request,$id){        
         $request->file('file')->store('public/Users');
-        /*
+        
         $str_img = $request->input('file');
         $str_img = str_replace(@"%2B","+",$str_img);
         $str_img = str_replace(@"%2F","/",$str_img);
         $str_img = str_replace(@"%3D","=",$str_img);
-        */
-        //$user = User::findOrFail($id);
+        
+        $user = User::findOrFail($id);
 
 
-        //Storage::put('/public/foo.png',base64_decode($str_img));
-        //file_put_contents('storage/foo.png', base64_decode($str_img));
-        /*
-        Storage::disk('public')->put('/public/foo.png',base64_decode($str_img));
-        Storage::disk('public')->put('public/foo.png',base64_decode($str_img));
-        Storage::disk('public')->put('/foo.png',base64_decode($str_img));
-        Storage::disk('public')->put('foo.png',base64_decode($str_img));
-        */
+        Storage::put('/public/foo.png',base64_decode($str_img));        
 
-        //$path = Storage::putFile('/public/Users/'.$user->email,new File( public_path(Storage::url('/public/foo.png')) ));
+        $path = Storage::putFile('public/Users/'.$user->email,new File( public_path(Storage::url('public/foo.png')) ));
 
-        //Storage::delete('public/foo.png');
+        Storage::delete('public/foo.png');
 
-        /*
         
         if(strcmp($user->avatar,"public/Users/no-avatar.jpg"))
             Storage::delete($user->avatar);
         $user->avatar = $path;
         $user->save();
-        */
+        
 
-        //return response()->json(['sucess' => "enviado"]);
-        return back();
+        return response()->json(['sucess' => "enviado"]);    
     }
 
 }
