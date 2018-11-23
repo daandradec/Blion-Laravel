@@ -21,9 +21,14 @@ class UserController extends Controller{
         
         if($request->hasFile('picture')){
             $picture = $user->profilePicture;
-            if(strcmp($picture->profile_picture,"public/Users/no-avatar.jpg"))
-                Storage::delete($picture->profile_picture);
-            $picture->profile_picture = $request->file('picture')->store('public/Users/'.$user->email);
+            
+            if(config('app.env') == "local"){
+                if(strcmp($picture->profile_picture,"public/Users/no-avatar.jpg"))
+                    Storage::delete($picture->profile_picture);
+                $picture->profile_picture = $request->file('picture')->store('public/Users/'.$user->email);
+            }else
+                return back()->with('status','DEBES INSTALAR AWS S3 PARA PODER ALMACENAR');  
+            
             $picture->save();
             return back()->with('status','Cambios Guardados Correctamente');
         }
@@ -46,10 +51,15 @@ class UserController extends Controller{
             $type = $request->file('mediafile')->getMimeType();
             $type = substr($type, 0, strpos($type, "/"));
 
-            if($type == "image")
-                $user->mediaContents()->create(['media_path'=>$request->file('mediafile')->store('public/Users/'.$user->email),'media_type'=>'image']);
-            if($type == "video")
-                $user->mediaContents()->create(['media_path'=>$request->file('mediafile')->store('public/Users/'.$user->email),'media_type'=>'video']);
+            if(config('app.env') == "local"){
+                if($type == "image")
+                    $user->mediaContents()->create(['media_path'=> $request->file('mediafile')->store('public/Users/'.$user->email),'media_type'=>'image']);
+                if($type == "video")
+                    $user->mediaContents()->create(['media_path'=> $request->file('mediafile')->store('public/Users/'.$user->email),'media_type'=>'video']);
+            }else
+                return back()->with('status','DEBES INSTALAR AWS S3 PARA PODER ALMACENAR');   
+
+            
             return back()->with('status','Archivo Almacenado');
         }
 
@@ -58,7 +68,12 @@ class UserController extends Controller{
 
     public function contentDestroy($id){
         $mediaContent = MediaContents::findOrFail($id);
-        Storage::delete($mediaContent->media_path);
+
+        if(config('app.env') == "local")
+            Storage::delete($mediaContent->media_path);
+        else
+            return back()->with('status','DEBES INSTALAR AWS S3 PARA PODER ALMACENAR');
+            
         $mediaContent->delete();
         return back()->with('status','Archivo eliminado');
     }

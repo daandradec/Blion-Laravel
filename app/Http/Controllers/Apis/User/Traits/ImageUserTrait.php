@@ -10,12 +10,20 @@ use App\User;
 
 trait ImageUserTrait{
 
-    public function profilePicture($id){      
-        return Image::make(Storage::get(User::findOrFail($id)->profilePicturePath()))->response();  
+    public function profilePicture($id){            
+        if(config('app.env') == "local")
+            return Image::make(Storage::get(User::findOrFail($id)->profilePicturePath()))->response();         
+        /** ENV == production **/
+        return response()->file(public_path(User::findOrFail($id)->profilePicturePath()));        
     }
+
+
     public function imageSpecific(Request $request){ // mejor retornar una imagen, y desde unity acceder a los paths de la relacion con MediaContents del usuario
         if($request->has('path')){
-            return Image::make(Storage::get(urldecode($request->path)))->response();
+            if(config('app.env') == "local")
+                return Image::make(Storage::get(urldecode($request->path)))->response();
+            /** ENV == production **/
+            return response()->file(public_path(urldecode($request->path)));
         }
         return response('error when search image',404);
     }
@@ -28,19 +36,22 @@ trait ImageUserTrait{
         
         $user = User::findOrFail($id);
 
+        if(config('app.env') == "local"){
+            Storage::put('/public/foo.png',base64_decode($str_img));        
 
-        Storage::put('/public/foo.png',base64_decode($str_img));        
+            $path = Storage::putFile('public/Users/'.$user->email,new File( public_path(Storage::url('public/foo.png')) ));
 
-        $path = Storage::putFile('public/Users/'.$user->email,new File( public_path(Storage::url('public/foo.png')) ));
+            Storage::delete('public/foo.png');
 
-        Storage::delete('public/foo.png');
-
-        $picture = $user->profilePicture;
-        if(strcmp($picture->profile_picture,"public/Users/no-avatar.jpg"))
-            Storage::delete($picture->profile_picture);
-        $picture->profile_picture = $path;
-        $picture->save();
-        
+            $picture = $user->profilePicture;
+            if(strcmp($picture->profile_picture,"public/Users/no-avatar.jpg"))
+                Storage::delete($picture->profile_picture);
+            $picture->profile_picture = $path;
+            $picture->save();
+        }
+        /** ENV == production **/
+        if(config('app.env') == "production")
+            return response()->json(['sucess' => "En produccion instala AWS S3"]);
 
         return response()->json(['sucess' => "enviado"]);    
     }

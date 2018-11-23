@@ -9,11 +9,14 @@ use App\User;
 trait RegisterHandlerTrait{
 
     private function create(array $data){
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+        $picture = ProfilePicture::create();
+        $user->profilePicture()->save($picture);
+        return $user;
     }
     private function validator(array $data){
         return Validator::make($data, [
