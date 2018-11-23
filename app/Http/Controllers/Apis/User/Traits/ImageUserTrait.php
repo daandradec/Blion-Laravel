@@ -10,11 +10,12 @@ use App\User;
 
 trait ImageUserTrait{
 
-    public function profilePicture($id){            
+    public function profilePicture($id){ 
         if(config('app.env') == "local")
             return Image::make(Storage::get(User::findOrFail($id)->profilePicturePath()))->response();         
         /** ENV == production **/
-        return response()->file(public_path(User::findOrFail($id)->profilePicturePath()));        
+        return response()->file( storage_path('app/' . User::findOrFail($id)->profilePicturePath()) );  
+        //return response()->file(public_path(User::findOrFail($id)->profilePicturePath())); ---- mientras no tengamos aws s3
     }
 
 
