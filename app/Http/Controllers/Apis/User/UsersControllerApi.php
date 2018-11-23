@@ -14,6 +14,7 @@ class UsersControllerApi extends Controller
     use VideoUserTrait;
 
     public function index($id){
+        dd(config('app.env'));
         $user = User::find($id);
         if($user == null)
             return response()->json(['success' => false,'name' => '','email' => '']);

@@ -31,7 +31,7 @@ class UserController extends Controller{
         return back()->with('fail','Formato de archivo incorrecto o vacio');
     }
 
-    public function contents(){
+    public function contents(){    
         $user = auth()->user();
         $user_id = $user->id;
         $media_images = $user->mediaContents->where('media_type','image');   
