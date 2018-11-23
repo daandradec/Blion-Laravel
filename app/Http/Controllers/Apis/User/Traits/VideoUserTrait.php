@@ -8,7 +8,7 @@ trait VideoUserTrait{
 
     public function videoSpecific(Request $request){
         if(config('app.env') == "local")
-            return response()->file(storage_path('app/' . $request->path));
+            return response()->file(storage_path('app/' . urldecode($request->path)));
         /** ENV == production **/
         return response()->file(public_path(urldecode($request->path)));
     }
