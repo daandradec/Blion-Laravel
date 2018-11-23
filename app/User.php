@@ -5,6 +5,8 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\ProfilePicture;
+use App\MediaContents;
 
 class User extends Authenticatable
 {
@@ -16,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','avatar',
+        'name', 'email', 'password',
     ];
 
     /**
@@ -27,4 +29,15 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function profilePicture(){
+        return $this->hasOne(ProfilePicture::class);
+    }
+    public function profilePicturePath(){
+        return $this->profilePicture->profile_picture;
+    }
+
+    public function mediaContents(){
+        return $this->hasMany(MediaContents::class);
+    }
 }

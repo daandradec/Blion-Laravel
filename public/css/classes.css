@@ -5,6 +5,11 @@
 	align-items: center;
 	text-align: center;
 }
+.center-vertical{
+	display: flex;
+	vertical-align: middle;
+	align-items: center;
+}
 
 .hr-line{
 	display: block;

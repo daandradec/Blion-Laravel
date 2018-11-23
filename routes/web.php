@@ -6,11 +6,11 @@
 */
 
 Route::get('/', function () {return view('welcome');});
-Route::get('/home',function(){return view('home');});
+Route::get('/home',function(){return view('home');})->name('home');
 
 Route::get('/login','Auth\LoginController@showLoginForm')->name('login');
 Route::post('/login','Auth\LoginController@login');
-Route::post('/logout','Auth\LoginController@logout')->name('logout');
+Route::get('/logout','Auth\LoginController@logout')->name('logout');
 Route::get('/register','Auth\RegisterController@showRegistrationForm')->name('register');
 Route::post('/register','Auth\RegisterController@register');
 
@@ -19,13 +19,22 @@ Route::post('/admin/login','Web\Admin\AdminLoginController@login');
 Route::get('/admin/register','Web\Admin\AdminRegisterController@showRegistrationForm')->name('admin.register');
 Route::post('/admin/register','Web\Admin\AdminRegisterController@register');
 
+Route::get('/user/contents','Web\User\UserController@contents')->name('user.contents');
+Route::post('/user/contents/{id}','Web\User\UserController@contentStore')->name('user.contents.store');
+Route::delete('/user/contents/{id}','Web\User\UserController@contentDestroy')->name('user.contents.destroy');
+Route::get('/user','Web\User\UserController@show')->name('user.show');
+Route::match(['put','patch'],'/user/{id}','Web\User\UserController@update')->name('user.update');
 
 /* APIS */
 
 /** User */
-Route::get('/api/users/{id}/image','Apis\User\UsersControllerApi@image');
-Route::post('/api/users/{id}/image','Apis\User\UsersControllerApi@postImage')->name('image');
 Route::get('/api/users/{id}','Apis\User\UsersControllerApi@index');
+Route::get('/api/users/{id}/contents','Apis\User\UsersControllerApi@contents');
+Route::get('/api/users/mediacontent/image','Apis\User\UsersControllerApi@imageSpecific');
+Route::get('/api/users/mediacontent/video','Apis\User\UsersControllerApi@videoSpecific');
+Route::get('/api/users/{id}/image','Apis\User\UsersControllerApi@profilePicture');
+Route::post('/api/users/{id}/image','Apis\User\UsersControllerApi@postProfilePicture');
+
 /** Login */
 Route::post('/api/login','Apis\Auth\LoginControllerApi@login');
 Route::post('/api/register','Apis\Auth\RegisterControllerApi@register');

@@ -30,7 +30,6 @@ trait LoginValidatorTrait{
         unset($array["email_verified_at"]);
         unset($array['created_at']);
         unset($array['updated_at']);
-        unset($array['avatar']);
         return $array;
     }
 

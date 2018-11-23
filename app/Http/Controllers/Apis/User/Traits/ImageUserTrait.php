@@ -10,13 +10,17 @@ use App\User;
 
 trait ImageUserTrait{
 
-    public function image($id){        
-        return Image::make(Storage::get(User::findOrFail($id)->avatar))->response();        
+    public function profilePicture($id){      
+        return Image::make(Storage::get(User::findOrFail($id)->profilePicturePath()))->response();  
+    }
+    public function imageSpecific(Request $request){ // mejor retornar una imagen, y desde unity acceder a los paths de la relacion con MediaContents del usuario
+        if($request->has('path')){
+            return Image::make(Storage::get(urldecode($request->path)))->response();
+        }
+        return response('error when search image',404);
     }
 
-    public function postImage(Request $request,$id){        
-        $request->file('file')->store('public/Users');
-        
+    public function postProfilePicture(Request $request,$id){                
         $str_img = $request->input('file');
         $str_img = str_replace(@"%2B","+",$str_img);
         $str_img = str_replace(@"%2F","/",$str_img);
@@ -31,11 +35,11 @@ trait ImageUserTrait{
 
         Storage::delete('public/foo.png');
 
-        
-        if(strcmp($user->avatar,"public/Users/no-avatar.jpg"))
-            Storage::delete($user->avatar);
-        $user->avatar = $path;
-        $user->save();
+        $picture = $user->profilePicture;
+        if(strcmp($picture->profile_picture,"public/Users/no-avatar.jpg"))
+            Storage::delete($picture->profile_picture);
+        $picture->profile_picture = $path;
+        $picture->save();
         
 
         return response()->json(['sucess' => "enviado"]);    
