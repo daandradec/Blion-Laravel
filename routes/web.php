@@ -30,10 +30,15 @@ Route::match(['put','patch'],'/user/{id}','Web\User\UserController@update')->nam
 /** User */
 Route::get('/api/users/{id}','Apis\User\UsersControllerApi@index');
 Route::get('/api/users/{id}/contents','Apis\User\UsersControllerApi@contents');
+
 Route::get('/api/users/mediacontent/image','Apis\User\UsersControllerApi@imageSpecific');
 Route::get('/api/users/mediacontent/video','Apis\User\UsersControllerApi@videoSpecific');
+
 Route::get('/api/users/{id}/image','Apis\User\UsersControllerApi@profilePicture');
 Route::post('/api/users/{id}/image','Apis\User\UsersControllerApi@postProfilePicture');
+
+Route::post('/api/users/{id}/mediacontent/image','Apis\User\UsersControllerApi@postImageMediaContent');
+Route::post('/api/users/{id}/mediacontent/destroy','Apis\User\UsersControllerApi@postDestroyMediaContent');
 
 /** Login */
 Route::post('/api/login','Apis\Auth\LoginControllerApi@login');

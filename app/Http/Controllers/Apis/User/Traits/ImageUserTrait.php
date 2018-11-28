@@ -54,8 +54,48 @@ trait ImageUserTrait{
         if(config('app.env') == "production")
             return response()->json(['sucess' => "En produccion instala AWS S3"]);
 
-        return response()->json(['sucess' => "enviado"]);    
+        return response()->json(['success' => "enviado"]);    
     }
 
+    public function postImageMediaContent(Request $request,$id){
+        $str_img = $request->input('file');
+        $str_img = str_replace(@"%2B","+",$str_img);
+        $str_img = str_replace(@"%2F","/",$str_img);
+        $str_img = str_replace(@"%3D","=",$str_img);
+        
+        $user = User::findOrFail($id);
+
+        if(config('app.env') == "local"){
+            Storage::put('/public/foo.png',base64_decode($str_img));        
+
+            $path = Storage::putFile('public/Users/'.$user->email,new File( public_path(Storage::url('public/foo.png')) ));
+
+            Storage::delete('public/foo.png');
+
+            $user->mediaContents()->create(['media_path'=> $path, 'media_type'=>'image']);
+        }
+
+        if(config('app.env') == "production")
+            return response()->json(['sucess' => "En produccion instala AWS S3"]);
+        
+        return response()->json(['success' => true,'message' => urlencode($path)]);   
+    }
+
+    public function postDestroyMediaContent(Request $request, $id){
+        $user = User::findOrFail($id);
+        if(config('app.env') == "local"){
+            $path = urldecode($request->input('file'));
+            
+            Storage::delete($path);
+            $mediaContent = $user->mediaContents->where('media_path',$path)->first();
+            $mediaContent->delete();
+
+        }
+
+        if(config('app.env') == "production")
+            return response()->json(['sucess' => "En produccion instala AWS S3"]);
+
+        return response()->json(['success' => "destruido"]);
+    }
 }
 ?>
