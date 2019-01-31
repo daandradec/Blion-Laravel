@@ -3,15 +3,14 @@
 namespace App\Http\Controllers\Apis\User;
 
 use App\Http\Controllers\Apis\User\Traits\ImageUserTrait;
-use App\Http\Controllers\Apis\User\Traits\VideoUserTrait;
+use App\Http\Controllers\Apis\User\Traits\MediaContentTrait;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\User;
 
 class UsersControllerApi extends Controller
 {
-    use ImageUserTrait;
-    use VideoUserTrait;
+    use MediaContentTrait;
 
     public function index($id){
         $user = User::find($id);

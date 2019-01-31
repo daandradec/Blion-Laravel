@@ -25,20 +25,31 @@ Route::delete('/user/contents/{id}','Web\User\UserController@contentDestroy')->n
 Route::get('/user','Web\User\UserController@show')->name('user.show');
 Route::match(['put','patch'],'/user/{id}','Web\User\UserController@update')->name('user.update');
 
+
 /* APIS */
 
 /** User */
 Route::get('/api/users/{id}','Apis\User\UsersControllerApi@index');
 Route::get('/api/users/{id}/contents','Apis\User\UsersControllerApi@contents');
 
-Route::get('/api/users/mediacontent/image','Apis\User\UsersControllerApi@imageSpecific');
+/* Route::get('/api/users/mediacontent/image','Apis\User\UsersControllerApi@imageSpecific');
 Route::get('/api/users/mediacontent/video','Apis\User\UsersControllerApi@videoSpecific');
+//Route::post('/api/users/imagenbytes','Apis\User\UsersControllerApi@postProfilePicture2');
+ estas 3 remplazadas por solo esta */
+Route::get('/api/users/mediacontent/media','Apis\User\UsersControllerApi@mediaContent');
 
 Route::get('/api/users/{id}/image','Apis\User\UsersControllerApi@profilePicture');
 Route::post('/api/users/{id}/image','Apis\User\UsersControllerApi@postProfilePicture');
 
+
+/*
 Route::post('/api/users/{id}/mediacontent/image','Apis\User\UsersControllerApi@postImageMediaContent');
 Route::post('/api/users/{id}/mediacontent/destroy','Apis\User\UsersControllerApi@postDestroyMediaContent');
+Remplazadas por estas */
+
+Route::post('api/users/{id}/mediacontent/media','Apis\User\UsersControllerApi@postMediaContent');
+Route::post('api/users/{id}/mediacontent/destroy','Apis\User\UsersControllerApi@postDestroyMediaContent');
+
 
 /** Login */
 Route::post('/api/login','Apis\Auth\LoginControllerApi@login');

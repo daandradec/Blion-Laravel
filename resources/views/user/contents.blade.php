@@ -53,12 +53,14 @@
             @endforeach
             @foreach ($media_videos as $video)
                 <figure style="width:300px;height:212px;overflow:hidden;" class="d-inline-block text-center bg-dark border position-relative">
-                    <div style="width:100%;height:100%;position: absolute;top:0;left:0;">
+                    
+
+                    <div style="width:100%;height:40px;position: absolute;top:0;left:0;">                        
                         <form method="POST" action="{{route('user.contents.destroy',$video->id)}}" class="float-right">
                             @csrf
                             {!!method_field('DELETE')!!}
                             <button type="submit" class="btn btn-danger btn-xs">X</button>
-                        </form>
+                        </form>                        
                     </div>
                     
                     <video controls src="{{Storage::url($video->media_path)}}" style="height:210px;">

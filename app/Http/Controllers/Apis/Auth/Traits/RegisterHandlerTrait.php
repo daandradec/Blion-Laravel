@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Apis\Auth\Traits;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use App\ProfilePicture;
 use App\User;
 
 trait RegisterHandlerTrait{
@@ -45,7 +46,6 @@ trait RegisterHandlerTrait{
         unset($array["email_verified_at"]);
         unset($array['created_at']);
         unset($array['updated_at']);
-        unset($array['avatar']);
         return $array;
     }
 }
