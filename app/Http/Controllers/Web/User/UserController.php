@@ -25,9 +25,13 @@ class UserController extends Controller{
             if(config('app.env') == "local"){
                 if(strcmp($picture->profile_picture,"public/Users/no-avatar.jpg"))
                     Storage::delete($picture->profile_picture);
-                $picture->profile_picture = $request->file('picture')->store('public/Users/'.$user->email);
-            }else
-                return back()->with('status','DEBES INSTALAR AWS S3 PARA PODER ALMACENAR');  
+                $picture->profile_picture = $request->file('picture')->store('public/Users/'.$user->email);                             
+            }else{      /** ENV == production **/
+                if(strcmp($picture->profile_picture,"public/Media/no-avatar.jpg"))
+                    Storage::disk('s3')->delete($picture->profile_picture);
+                $picture->profile_picture = Storage::disk('s3')->putFile('public/Media/'.$user->email, $request->file('picture')); 
+            }
+                
             
             $picture->save();
             return back()->with('status','Cambios Guardados Correctamente');
@@ -56,8 +60,12 @@ class UserController extends Controller{
                     $user->mediaContents()->create(['media_path'=> $request->file('mediafile')->store('public/Users/'.$user->email),'media_type'=>'image']);
                 if($type == "video")
                     $user->mediaContents()->create(['media_path'=> $request->file('mediafile')->store('public/Users/'.$user->email),'media_type'=>'video']);
-            }else
-                return back()->with('status','DEBES INSTALAR AWS S3 PARA PODER ALMACENAR');   
+            }else{      /** ENV == production **/
+                if($type == "image")
+                    $user->mediaContents()->create(['media_path'=> Storage::disk('s3')->putFile('public/Media/'.$user->email, $request->file('mediafile')) ,'media_type'=>'image']);
+                if($type == "video")
+                    $user->mediaContents()->create(['media_path'=> Storage::disk('s3')->putFile('public/Media/'.$user->email, $request->file('mediafile')) ,'media_type'=>'video']);
+            }
 
             
             return back()->with('status','Archivo Almacenado');
@@ -71,8 +79,10 @@ class UserController extends Controller{
 
         if(config('app.env') == "local")
             Storage::delete($mediaContent->media_path);
-        else
-            return back()->with('status','DEBES INSTALAR AWS S3 PARA PODER ALMACENAR');
+        else{       /** ENV == production **/
+            Storage::disk('s3')->delete($mediaContent->media_path);
+        }
+            
             
         $mediaContent->delete();
         return back()->with('status','Archivo eliminado');

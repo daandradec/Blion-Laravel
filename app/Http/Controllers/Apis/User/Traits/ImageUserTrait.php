@@ -49,6 +49,7 @@ trait ImageUserTrait{
                 Storage::delete($picture->profile_picture);
             $picture->profile_picture = $path;
             $picture->save();
+            
         }
         /** ENV == production **/
         if(config('app.env') == "production")

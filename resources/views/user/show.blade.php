@@ -28,7 +28,11 @@
                         <p style="font-size:2em;font-weight:100;">{{Auth::user()->email}}</p>
                     </div>
                     <div class="w-50">
-                        <img src="{{Storage::url(auth()->user()->profilePicturePath() )}}" style="max-width:300px;width:50%;">                
+                        @if( config('app.env') == "local" )
+                            <img src="{{Storage::url(auth()->user()->profilePicturePath() )}}" style="max-width:300px;width:50%;">                
+                        @else
+                            <img src="{{"https://s3-us-west-1.amazonaws.com/blion-bucket/".auth()->user()->profilePicturePath()}}" style="max-width:300px;width:50%;">                
+                        @endif                        
                         <br>
                         <form action="{{route('user.update',Auth::user()->id)}}" method="POST" enctype="multipart/form-data">
                             {!! method_field('PUT') !!}

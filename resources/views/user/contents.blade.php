@@ -39,7 +39,11 @@
         <div class="w-100 text-center">
             @foreach ($media_images as $image)
                 <figure style="width:300px;overflow:hidden;" class="d-inline-block text-center bg-dark border position-relative figure-modal">
-                    <img src="{{Storage::url($image->media_path)}}" style="height:210px;">
+                    @if( config('app.env') == "local" )
+                        <img src="{{Storage::url($image->media_path)}}" style="height:210px;">
+                    @else
+                        <img src="{{"https://s3-us-west-1.amazonaws.com/blion-bucket/".$image->media_path}}" style="height:210px;">
+                    @endif
 
                     <div style="width:100%;height:100%;position: absolute;top:0;left:0;">
                         <form method="POST" action="{{route('user.contents.destroy',$image->id)}}" class="float-right">
@@ -62,9 +66,12 @@
                             <button type="submit" class="btn btn-danger btn-xs">X</button>
                         </form>                        
                     </div>
-                    
-                    <video controls src="{{Storage::url($video->media_path)}}" style="height:210px;">
-     
+
+                    @if( config('app.env') == "local" )
+                        <video controls src="{{Storage::url($video->media_path)}}" style="height:210px;">
+                    @else
+                        <video controls src="{{"https://s3-us-west-1.amazonaws.com/blion-bucket/".$video->media_path}}" style="height:210px;">
+                    @endif
                 </figure>    
             @endforeach
         </div>

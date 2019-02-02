@@ -16,6 +16,12 @@ trait RegisterHandlerTrait{
             'password' => Hash::make($data['password']),
         ]);
         $picture = ProfilePicture::create();
+        
+        if(config('app.env') != "local"){ /** ENV == production **/
+            $picture->profile_picture = 'public/Media/no-avatar.jpg';
+            $picture->save();
+        }
+            
         $user->profilePicture()->save($picture);
         return $user;
     }

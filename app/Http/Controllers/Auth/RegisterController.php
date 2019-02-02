@@ -70,6 +70,12 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
         ]);
         $picture = ProfilePicture::create();
+
+        if(config('app.env') != "local"){ /** ENV == production **/
+            $picture->profile_picture = 'public/Media/no-avatar.jpg';
+            $picture->save();
+        }
+
         $user->profilePicture()->save($picture); //para crearlo user_id debe admitir nullos, y la tabla ProfilePicture debe tener una llave primaria
         //$picture->user_id = $user->id;
         //$picture->save();

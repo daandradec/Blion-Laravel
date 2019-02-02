@@ -14,7 +14,7 @@ trait MediaContentTrait{
         if(config('app.env') == "local")
             return Storage::response(User::findOrFail($id)->profilePicturePath());
         /** ENV == production **/
-        return response()->file( storage_path('app/' . User::findOrFail($id)->profilePicturePath()) );  
+        return Storage::disk('s3')->response(User::findOrFail($id)->profilePicturePath());
     }
 
     public function postProfilePicture(Request $request, $id){ // POST
@@ -26,12 +26,13 @@ trait MediaContentTrait{
                 if(strcmp($picture->profile_picture,"public/Users/no-avatar.jpg"))
                     Storage::delete($picture->profile_picture);
                 $picture->profile_picture = $request->file('mediafile')->store('public/Users/'.$user->email);
-                $picture->save();
-                return response()->json(['sucess' => "enviado"]);
+            }else{      /** ENV == production **/
+                if(strcmp($picture->profile_picture,"public/Media/no-avatar.jpg"))
+                    Storage::disk('s3')->delete($picture->profile_picture);
+                $picture->profile_picture = Storage::disk('s3')->putFile('public/Media/'.$user->email, $request->file('mediafile')); 
             }
-            if(config('app.env') == "production"){
-                return response()->json(['sucess' => "En produccion instala AWS S3"]);
-            }
+            $picture->save();
+            return response()->json(['sucess' => "enviado"]);            
         }
             
         return response('error sending the data to the server', 404); 
@@ -40,12 +41,11 @@ trait MediaContentTrait{
     public function mediaContent(Request $request){ // GET
         
         if($request->has('path')){
-            if(config('app.env') == "local"){
-                $path = urldecode($request->path);
+            $path = urldecode($request->path);
+            if(config('app.env') == "local")            
                 return Storage::response($path);
-            }
-            if(config('app.env') == "production")
-                return response()->file(public_path(urldecode($request->path)));
+            /** ENV == production **/
+            return Storage::disk('s3')->response($path);
         }
 
         return response('error sending the data to the server', 404); 
@@ -66,9 +66,12 @@ trait MediaContentTrait{
                     $user->mediaContents()->create(['media_path'=> $path,'media_type'=>'video']);
 
                 return response()->json(['success' => true,'message' => urlencode($path)]);
-            }
-            if(config('app.env') == "production"){
-                return response()->json(['sucess' => "En produccion instala AWS S3"]);
+            }else{      /** ENV == production **/
+                $path = Storage::disk('s3')->putFile('public/Media/'.$user->email, $request->file('mediafile'));
+                if($type == "image")
+                    $user->mediaContents()->create(['media_path'=> $path, 'media_type'=>'image']);
+                if($type == "video")
+                    $user->mediaContents()->create(['media_path'=> $path,'media_type'=>'video']);                
             }
         }
             
@@ -76,19 +79,21 @@ trait MediaContentTrait{
     }
 
     public function postDestroyMediaContent(Request $request, $id){
-        $user = User::findOrFail($id);
-        if(config('app.env') == "local"){
+        $user = User::findOrFail($id);        
+        if($request->has('path')){
             $path = urldecode($request->input('path'));
-            
-            Storage::delete($path);
+            if(config('app.env') == "local")
+                Storage::delete($path);
+            else      /** ENV == production **/
+                Storage::disk('s3')->delete($path);                      
             $mediaContent = $user->mediaContents->where('media_path',$path)->first();
             $mediaContent->delete();
+
+            return response()->json(['success' => "destruido"]);
         }
 
-        if(config('app.env') == "production")
-            return response()->json(['sucess' => "En produccion instala AWS S3"]);
-
-        return response()->json(['success' => "destruido"]);
+        return response('error destroying the data to the server', 404); 
+        
     }
 }
 
