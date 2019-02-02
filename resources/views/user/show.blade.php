@@ -29,6 +29,7 @@
                     </div>
                     <div class="w-50">
                         @if( config('app.env') == "local" )
+                            <p>Estas en local</p>
                             <img src="{{Storage::url(auth()->user()->profilePicturePath() )}}" style="max-width:300px;width:50%;">                
                         @else
                             <img src="{{"https://s3-us-west-1.amazonaws.com/blion-bucket/".auth()->user()->profilePicturePath()}}" style="max-width:300px;width:50%;">                
