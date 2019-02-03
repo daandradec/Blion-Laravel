@@ -29,7 +29,7 @@ trait MediaContentTrait{
             }else{      /** ENV == production **/
                 if(strcmp($picture->profile_picture,"public/Media/no-avatar.jpg"))
                     Storage::disk('s3')->delete($picture->profile_picture);
-                $picture->profile_picture = Storage::disk('s3')->putFile('public/Media/'.$user->email, $request->file('mediafile')); 
+                $picture->profile_picture = Storage::disk('s3')->putFile('public/Media/'.$user->email, $request->file('mediafile'),"public"); 
             }
             $picture->save();
             return response()->json(['sucess' => "enviado"]);            
@@ -67,7 +67,7 @@ trait MediaContentTrait{
 
                 return response()->json(['success' => true,'message' => urlencode($path)]);
             }else{      /** ENV == production **/
-                $path = Storage::disk('s3')->putFile('public/Media/'.$user->email, $request->file('mediafile'));
+                $path = Storage::disk('s3')->putFile('public/Media/'.$user->email, $request->file('mediafile'),"public");
                 if($type == "image")
                     $user->mediaContents()->create(['media_path'=> $path, 'media_type'=>'image']);
                 if($type == "video")
