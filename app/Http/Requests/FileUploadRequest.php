@@ -24,7 +24,7 @@ class FileUploadRequest extends FormRequest
     public function rules()
     {
         return [
-            'mediafile' => 'mimes:jpg,jpeg,png,mp4,flv,avi'
+            'mediafile' => 'mimes:jpg,jpeg,png,mp4'
         ];
     }
 }
