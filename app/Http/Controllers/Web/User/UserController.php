@@ -51,13 +51,6 @@ class UserController extends Controller{
     public function contentStore(Request $request,$id){
         $user = User::findOrFail($id);        
 
-        dd($request);
-
-        ini_set('post_max_size', '100M'); 
-        ini_set('upload_max_filesize', '100M');
-        ini_set('memory_limit', '1000M');
-        ini_set('max_execution_time', '1920');
-
         if($request->hasFile('mediafile')){
             $type = $request->file('mediafile')->getMimeType();
             $type = substr($type, 0, strpos($type, "/"));
