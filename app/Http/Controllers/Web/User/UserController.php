@@ -48,7 +48,7 @@ class UserController extends Controller{
         return view('user.contents',compact(['user_id','media_images','media_videos']) );
     }
 
-    public function contentStore(FileUploadRequest $request,$id){
+    public function contentStore(Request $request,$id){
         $user = User::findOrFail($id);        
 
         dd($request);
