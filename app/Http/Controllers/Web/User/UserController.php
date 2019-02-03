@@ -29,7 +29,7 @@ class UserController extends Controller{
             }else{      /** ENV == production **/
                 if(strcmp($picture->profile_picture,"public/Media/no-avatar.jpg"))
                     Storage::disk('s3')->delete($picture->profile_picture);
-                $picture->profile_picture = Storage::disk('s3')->putFile('public/Media/'.$user->email, $request->file('picture')); 
+                $picture->profile_picture = Storage::disk('s3')->putFile('public/Media/'.$user->email, $request->file('picture'),"public"); 
             }
                 
             
@@ -62,9 +62,9 @@ class UserController extends Controller{
                     $user->mediaContents()->create(['media_path'=> $request->file('mediafile')->store('public/Users/'.$user->email),'media_type'=>'video']);
             }else{      /** ENV == production **/
                 if($type == "image")
-                    $user->mediaContents()->create(['media_path'=> Storage::disk('s3')->putFile('public/Media/'.$user->email, $request->file('mediafile')) ,'media_type'=>'image']);
+                    $user->mediaContents()->create(['media_path'=> Storage::disk('s3')->putFile('public/Media/'.$user->email, $request->file('mediafile'),"public") ,'media_type'=>'image']);
                 if($type == "video")
-                    $user->mediaContents()->create(['media_path'=> Storage::disk('s3')->putFile('public/Media/'.$user->email, $request->file('mediafile')) ,'media_type'=>'video']);
+                    $user->mediaContents()->create(['media_path'=> Storage::disk('s3')->putFile('public/Media/'.$user->email, $request->file('mediafile'),"public") ,'media_type'=>'video']);
             }
 
             
