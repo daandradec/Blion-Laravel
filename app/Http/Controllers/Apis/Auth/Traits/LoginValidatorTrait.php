@@ -15,11 +15,11 @@ trait LoginValidatorTrait{
         }
         $user = User::where('email', $request->email)->first();
         if(!$this->userExists($user)){
-            $this->message = "The User doesn't exists";
+            $this->message = "Wrong Combination";
             return false;
         }
         if(!$this->isRealPassword($request->password,$user->password)){
-            $this->message = "The password is incorrect";
+            $this->message = "Wrong Combination";
             return false;
         }
         $this->message = json_encode($this->reduceUserElloquentCollection($user->toArray()));
@@ -37,7 +37,7 @@ trait LoginValidatorTrait{
         return ! Validator::make($request->all(), [
             'email' => 'required|string',
             'password' => 'required|string',
-        ])->fails(); 
+        ])->fails(); //true or false
     }
     private function userExists($user){
         return $user != null;
