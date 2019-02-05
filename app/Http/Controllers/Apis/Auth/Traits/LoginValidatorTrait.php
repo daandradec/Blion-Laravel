@@ -27,7 +27,6 @@ trait LoginValidatorTrait{
     }
 
     private function reduceUserElloquentCollection($array){
-        unset($array["email_verified_at"]);
         unset($array['created_at']);
         unset($array['updated_at']);
         return $array;
