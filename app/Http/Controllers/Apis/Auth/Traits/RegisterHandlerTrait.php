@@ -46,7 +46,7 @@ trait RegisterHandlerTrait{
         }
         $user = $this->create($request->all());
         $this->message = json_encode($this->reduceUserElloquentCollection($user->toArray()));
-        //event(new VerifiedEmail($user));
+        event(new VerifiedEmail($user));
         return true;
     }
 

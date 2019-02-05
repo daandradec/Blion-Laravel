@@ -9,7 +9,7 @@ use App\Notifications\EmailVerificationReceived;
 use App\ProfilePicture;
 use App\MediaContents;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable
 {
     use Notifiable;
 
