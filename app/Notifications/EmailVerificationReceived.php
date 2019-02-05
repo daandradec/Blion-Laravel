@@ -42,7 +42,7 @@ class EmailVerificationReceived extends Notification
 
         return (new MailMessage)
             ->subject(Lang::getFromJson('Verify Your Email Address'))
-            ->line(Lang::getFromJson('Please click the button below to verify your email address.'))
+            ->line(Lang::getFromJson('Hello Blion User, Please click the button below to verify your email address.'))
             ->action(
                 Lang::getFromJson('Verify Email Address'),
                 $this->verificationUrl($notifiable)
