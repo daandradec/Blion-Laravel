@@ -73,7 +73,7 @@ trait MediaContentTrait{
                 if($type == "video")
                     $user->mediaContents()->create(['media_path'=> $path,'media_type'=>'video']);                
             }
-            return response()->json(['sucess' => "enviado"]);  
+            return response()->json(['success' => true,'message' => urlencode($path)]);  
         }
             
         return response('error sending the data to the server', 404); 
