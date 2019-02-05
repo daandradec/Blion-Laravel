@@ -6,13 +6,17 @@
 */
 
 Route::get('/', function () {return view('welcome');});
-Route::get('/home',function(){return view('home');})->name('home');
+Route::get('/home',function(){return view('home');})->name('home')->middleware('verified');
 
 Route::get('/login','Auth\LoginController@showLoginForm')->name('login');
 Route::post('/login','Auth\LoginController@login');
 Route::get('/logout','Auth\LoginController@logout')->name('logout');
 Route::get('/register','Auth\RegisterController@showRegistrationForm')->name('register');
 Route::post('/register','Auth\RegisterController@register');
+Route::get('/email/resend','Auth\VerificationController@resend')->name('verification.resend'); // la uri para reenviar un email desde la vista
+Route::get('/email/verify','Auth\VerificationController@show')->name('verification.notice'); // vista para no acceder sin verificar email
+Route::get('/email/verify/{id}','Auth\VerificationController@verify')->name('verification.verify'); // la uri que usa el email para verificar
+
 
 Route::get('/admin/login','Web\Admin\AdminLoginController@showLoginForm')->name('admin.login');
 Route::post('/admin/login','Web\Admin\AdminLoginController@login');

@@ -5,10 +5,11 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Notifications\EmailVerificationReceived;
 use App\ProfilePicture;
 use App\MediaContents;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable;
 
@@ -39,5 +40,11 @@ class User extends Authenticatable
 
     public function mediaContents(){
         return $this->hasMany(MediaContents::class);
+    }
+
+    // sobrescribiendo trait de vendor/laravel/framework/Illuminate\Auth/MustVerifyEmail
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new EmailVerificationReceived());
     }
 }

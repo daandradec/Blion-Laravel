@@ -12,6 +12,10 @@ use App\User;
 
 class UserController extends Controller{
 
+    public function __construct(){
+        $this->middleware('verified',[ 'only'=>['show','contents'] ]);
+    }
+
     public function show(){
         return view('user.show');
     }

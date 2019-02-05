@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Apis\Auth\Traits;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use App\Events\VerifiedEmail;
 use App\ProfilePicture;
 use App\User;
 
@@ -45,6 +46,7 @@ trait RegisterHandlerTrait{
         }
         $user = $this->create($request->all());
         $this->message = json_encode($this->reduceUserElloquentCollection($user->toArray()));
+        event(new VerifiedEmail($user));
         return true;
     }
 
