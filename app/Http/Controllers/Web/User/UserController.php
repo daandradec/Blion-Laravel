@@ -13,7 +13,11 @@ use App\User;
 class UserController extends Controller{
 
     public function __construct(){
-        $this->middleware('verified',[ 'only'=>['show','contents'] ]);
+        $this->middleware('verified',[ 'only'=>['show','contents','index'] ]);
+    }
+
+    public function index(){        
+        return view('user.index',['users'=>User::all()]);
     }
 
     public function show(){

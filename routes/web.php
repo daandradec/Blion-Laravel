@@ -26,6 +26,7 @@ Route::post('/admin/register','Web\Admin\AdminRegisterController@register');
 Route::get('/user/contents','Web\User\UserController@contents')->name('user.contents');
 Route::post('/user/contents/{id}','Web\User\UserController@contentStore')->name('user.contents.store');
 Route::delete('/user/contents/{id}','Web\User\UserController@contentDestroy')->name('user.contents.destroy');
+Route::get('/users','Web\User\UserController@index')->name('user.index');
 Route::get('/user','Web\User\UserController@show')->name('user.show');
 Route::match(['put','patch'],'/user/{id}','Web\User\UserController@update')->name('user.update');
 
