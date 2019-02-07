@@ -24,6 +24,10 @@ class UserController extends Controller{
         return view('user.show');
     }
 
+    public function delete($id){
+        return redirect()->route('home');
+    }
+
     public function update(ImageUploadRequest $request, $id){
         $user = User::findOrFail($id);
         
