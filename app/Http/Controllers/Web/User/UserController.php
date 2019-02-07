@@ -25,7 +25,9 @@ class UserController extends Controller{
     }
 
     public function delete($id){
-        return redirect()->route('home');
+        $user = User::findOrFail($id);
+        $user->delete();
+        return redirect()->route('user.index');
     }
 
     public function update(ImageUploadRequest $request, $id){
