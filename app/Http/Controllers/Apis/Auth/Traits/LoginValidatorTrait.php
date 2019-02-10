@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Apis\Auth\Traits;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use App\SessionToken;
 use App\User;
 
 trait LoginValidatorTrait{
@@ -23,7 +24,7 @@ trait LoginValidatorTrait{
             return false;
         }
         
-        $this->message = json_encode($this->insertTokenAuth($this->reduceUserElloquentCollection($user->toArray())));
+        $this->message = json_encode($this->insertTokenAuth($this->reduceUserElloquentCollection($user->toArray()),$user));
         // si el token no a expirado retornelo
         // si expiro o es nulo genere otro y guardelo
 
@@ -36,8 +37,15 @@ trait LoginValidatorTrait{
         return $array;
     }
 
-    private function insertTokenAuth($array){
-        $array["auth_token"] = csrf_token();
+    private function insertTokenAuth($array,$user){
+        $token = $user->sessionToken;
+        if(is_null($token)){
+            $token = SessionToken::create(['csrf'=>csrf_token(),'expired'=>Carbon::now()->addDays(1)]);
+            $user->sessionToken()->save($token);
+        }else if(Carbon::now()->gt($token->expired))
+            $token->update(['csrf'=>csrf_token(),'expired'=>Carbon::now()->addDays(1)]);
+        
+        $array["auth_token"] = $token->csrf;
         return $array;
     }
 
@@ -48,7 +56,7 @@ trait LoginValidatorTrait{
         ])->fails(); //true or false
     }
     private function userExists($user){
-        return $user != null;
+        return !is_null($user);
     }
     private function isRealPassword($password,$encryptPassword){
         return Hash::check($password,$encryptPassword);

@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Notifications\EmailVerificationReceived;
 use App\ProfilePicture;
 use App\MediaContents;
+use App\SessionToken;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -41,6 +42,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function mediaContents(){
         return $this->hasMany(MediaContents::class);
     }
+
+    public function sessionToken(){
+        return $this->hasOne(SessionToken::class);
+    }
+
 
     // sobrescribiendo trait de vendor/laravel/framework/Illuminate\Auth/MustVerifyEmail
     public function sendEmailVerificationNotification()

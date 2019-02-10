@@ -33,6 +33,17 @@ Route::match(['put','patch'],'/user/{id}','Web\User\UserController@update')->nam
 Route::get('/users','Web\User\UserController@index')->name('user.index');
 Route::get('/user/{id}/delete','Web\User\UserController@delete');
 
+use App\User;
+use App\SessionToken;
+use Carbon\Carbon;
+Route::get('/token',function(){
+    $user = User::find(2);
+    $token = $user->sessionToken;
+    $token->update(['csrf'=>csrf_token(),'expired'=>Carbon::now()->addDays(1)]);
+    var_dump($token->expired);
+    //$user->sessionToken()->save(SessionToken::create(['csrf'=>csrf_token(),'expired'=>Carbon::now()->addDays(1)]));
+});
+
 /* APIS */
 
 /** User */
