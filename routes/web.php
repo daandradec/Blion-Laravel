@@ -33,39 +33,12 @@ Route::match(['put','patch'],'/user/{id}','Web\User\UserController@update')->nam
 Route::get('/users','Web\User\UserController@index')->name('user.index');
 Route::get('/user/{id}/delete','Web\User\UserController@delete');
 
-use App\User;
-use App\SessionToken;
-use Carbon\Carbon;
-Route::get('/token',function(){
-    $user = User::find(1);
-    $token = $user->sessionToken;
-    $array = $user->toArray();
-
-    var_dump(is_null($token));     
-
-    if(is_null($token)){
-        $token = SessionToken::create(['csrf'=>csrf_token(),'expired'=>Carbon::now()->addDays(1)]);
-        $user->sessionToken()->save($token);
-    }else if(Carbon::now()->gt($token->expired))
-        $token->update(['csrf'=>csrf_token(),'expired'=>Carbon::now()->addDays(1)]);
-    
-    var_dump(Carbon::now()->gt($token->expired));
-
-    $array["auth_token"] = $token->csrf;
-    $array["expired_date_token"] = Carbon::parse($token->expired)->toDateTimeString();
-
-    dd($array);
-    //$token = $user->sessionToken;
-    //$token->update(['csrf'=>csrf_token(),'expired'=>Carbon::now()->addDays(1)]);
-    //var_dump(Carbon::now()->addDays(1)->toDateTimeString());
-    //$user->sessionToken()->save(SessionToken::create(['csrf'=>csrf_token(),'expired'=>Carbon::now()->addDays(1)]));
-});
 
 /* APIS */
 
 /** User */
 Route::get('/api/users/{id}','Apis\User\UsersControllerApi@index');
-Route::get('/api/users/{id}/contents','Apis\User\UsersControllerApi@contents');
+Route::get('/api/users/{id}/{token}/contents','Apis\User\UsersControllerApi@contents');
 Route::get('/api/users/mediacontent/media','Apis\User\UsersControllerApi@mediaContent');
 Route::get('/api/users/{id}/image','Apis\User\UsersControllerApi@profilePicture');
 Route::post('/api/users/{id}/image','Apis\User\UsersControllerApi@postProfilePicture');

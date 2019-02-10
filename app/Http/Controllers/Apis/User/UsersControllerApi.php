@@ -19,10 +19,11 @@ class UsersControllerApi extends Controller
         return response()->json(['success' => true,'message'=>json_encode($user->toArray())]);
     }
 
-    public function contents($id){
+    public function contents($id,$token){
         $user = User::find($id);
         if($user == null)
             return response()->json(['success' => false]);
+        return response()->json(['success'=>false,'message'=> $user->sessionToken->csrf === $token,'tok1'=>$user->sessionToken->csrf,'tok2'=>$token]);
 
         $paths = $user->mediaContents()->select('media_path')->get()->toArray();
         $list = [];
