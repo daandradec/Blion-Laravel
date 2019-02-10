@@ -38,9 +38,23 @@ use App\SessionToken;
 use Carbon\Carbon;
 Route::get('/token',function(){
     $user = User::find(1);
-    $user = $user->toArray();
-    $user["expired_date_token"] = Carbon::now()->format('Y M D');
-    dd($user);
+    $token = $user->sessionToken;
+    $array = $user->toArray();
+
+    var_dump(is_null($token));     
+
+    if(is_null($token)){
+        $token = SessionToken::create(['csrf'=>csrf_token(),'expired'=>Carbon::now()->addDays(1)]);
+        $user->sessionToken()->save($token);
+    }else if(Carbon::now()->gt($token->expired))
+        $token->update(['csrf'=>csrf_token(),'expired'=>Carbon::now()->addDays(1)]);
+    
+    var_dump(Carbon::now()->gt($token->expired));
+
+    $array["auth_token"] = $token->csrf;
+    $array["expired_date_token"] = $token->expired;
+
+    dd($array);
     //$token = $user->sessionToken;
     //$token->update(['csrf'=>csrf_token(),'expired'=>Carbon::now()->addDays(1)]);
     //var_dump(Carbon::now()->addDays(1)->toDateTimeString());
