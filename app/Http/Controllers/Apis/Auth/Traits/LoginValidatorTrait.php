@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Apis\Auth\Traits;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
 use App\SessionToken;
 use App\User;
 
@@ -38,8 +39,7 @@ trait LoginValidatorTrait{
     }
 
     private function insertTokenAuth($array,$user){
-        $token = $user->sessionToken;
-        /*
+        $token = $user->sessionToken;        
         if(is_null($token)){
             $token = SessionToken::create(['csrf'=>csrf_token(),'expired'=>Carbon::now()->addDays(1)]);
             $user->sessionToken()->save($token);
@@ -48,7 +48,6 @@ trait LoginValidatorTrait{
         
         $array["auth_token"] = $token->csrf;
         $array["expired_date_token"] = $token->expired;
-        return $array;*/
         return $array;
     }
 
