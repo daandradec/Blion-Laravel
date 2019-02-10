@@ -37,10 +37,13 @@ use App\User;
 use App\SessionToken;
 use Carbon\Carbon;
 Route::get('/token',function(){
-    $user = User::find(2);
-    $token = $user->sessionToken;
+    $user = User::find(1);
+    $user = $user->toArray();
+    $user["expired_date_token"] = Carbon::now()->format('Y M D');
+    dd($user);
+    //$token = $user->sessionToken;
     //$token->update(['csrf'=>csrf_token(),'expired'=>Carbon::now()->addDays(1)]);
-    var_dump(Carbon::now()->addDays(1)->toDateTimeString());
+    //var_dump(Carbon::now()->addDays(1)->toDateTimeString());
     //$user->sessionToken()->save(SessionToken::create(['csrf'=>csrf_token(),'expired'=>Carbon::now()->addDays(1)]));
 });
 
