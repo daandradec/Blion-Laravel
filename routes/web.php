@@ -39,8 +39,8 @@ use Carbon\Carbon;
 Route::get('/token',function(){
     $user = User::find(2);
     $token = $user->sessionToken;
-    $token->update(['csrf'=>csrf_token(),'expired'=>Carbon::now()->addDays(1)]);
-    var_dump($token->expired);
+    //$token->update(['csrf'=>csrf_token(),'expired'=>Carbon::now()->addDays(1)]);
+    var_dump($token->expired->toDateTimeString());
     //$user->sessionToken()->save(SessionToken::create(['csrf'=>csrf_token(),'expired'=>Carbon::now()->addDays(1)]));
 });
 
