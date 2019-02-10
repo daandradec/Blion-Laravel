@@ -47,7 +47,7 @@ trait LoginValidatorTrait{
             $token->update(['csrf'=>csrf_token(),'expired'=>Carbon::now()->addDays(1)]);
         
         $array["auth_token"] = $token->csrf;
-        $array["expired_date_token"] = $token->expired->format('Y-m-d');
+        $array["expired_date_token"] = Carbon::parse($token->expired)->toDateTimeString();
         return $array;
     }
 
