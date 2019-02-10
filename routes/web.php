@@ -52,7 +52,7 @@ Route::get('/token',function(){
     var_dump(Carbon::now()->gt($token->expired));
 
     $array["auth_token"] = $token->csrf;
-    $array["expired_date_token"] = $token->expired;
+    $array["expired_date_token"] = $token->expired->date;
 
     dd($array);
     //$token = $user->sessionToken;
