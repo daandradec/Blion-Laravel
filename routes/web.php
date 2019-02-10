@@ -51,3 +51,5 @@ Route::post('/api/login','Apis\Auth\LoginControllerApi@login');
 Route::post('/api/register','Apis\Auth\RegisterControllerApi@register');
 
 /** ********************** **/
+
+Route::get('/api/csrf','Apis\User\UsersControllerApi@csrf');
