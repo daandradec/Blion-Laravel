@@ -22,8 +22,8 @@ trait LoginValidatorTrait{
             $this->message = "Wrong Combination";
             return false;
         }
-        $this->message = json_encode($this->reduceUserElloquentCollection($user->toArray()));
-        $this->message["auth_token"] = csrf_token();
+        
+        $this->message = json_encode($this->insertTokenAuth($this->reduceUserElloquentCollection($user->toArray())));
         // si el token no a expirado retornelo
         // si expiro o es nulo genere otro y guardelo
 
@@ -33,6 +33,11 @@ trait LoginValidatorTrait{
     private function reduceUserElloquentCollection($array){
         unset($array['created_at']);
         unset($array['updated_at']);
+        return $array;
+    }
+
+    private function insertTokenAuth($array){
+        $array["auth_token"] = csrf_token();
         return $array;
     }
 
