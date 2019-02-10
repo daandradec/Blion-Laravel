@@ -26,9 +26,7 @@ trait LoginValidatorTrait{
         }
         
         $this->message = json_encode( $this->insertTokenAuth($this->reduceUserElloquentCollection($user->toArray()),$user) );
-        // si el token no a expirado retornelo
-        // si expiro o es nulo genere otro y guardelo
-
+        
         return true;        
     }
 

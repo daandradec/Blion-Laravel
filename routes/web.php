@@ -39,8 +39,8 @@ Route::get('/user/{id}/delete','Web\User\UserController@delete');
 /** User */
 Route::get('/api/users/{id}','Apis\User\UsersControllerApi@index');
 Route::get('/api/users/{id}/{token}/contents','Apis\User\UsersControllerApi@contents');
-Route::get('/api/users/mediacontent/media','Apis\User\UsersControllerApi@mediaContent');
-Route::get('/api/users/{id}/image','Apis\User\UsersControllerApi@profilePicture');
+Route::get('/api/users/{id}/{token}/mediacontent/media','Apis\User\UsersControllerApi@mediaContent');
+Route::get('/api/users/{id}/{token}/image','Apis\User\UsersControllerApi@profilePicture');
 Route::post('/api/users/{id}/image','Apis\User\UsersControllerApi@postProfilePicture');
 
 /* Media Contents REST*/

@@ -12,7 +12,7 @@ class UsersControllerApi extends Controller
 {
     use MediaContentTrait;
 
-    public function index($id){
+    public function index($id){  // creo que no lo estoy utilizando, comprobarlo despues borrandolo
         $user = User::find($id);
         if($user == null)
             return response()->json(['success' => false,'name' => '','email' => '']);
@@ -22,8 +22,9 @@ class UsersControllerApi extends Controller
     public function contents($id,$token){
         $user = User::find($id);
         if($user == null)
-            return response()->json(['success' => false]);
-        return response()->json(['success'=>false,'message'=> $user->sessionToken->csrf === $token,'tok1'=>$user->sessionToken->csrf,'tok2'=>$token]);
+            return response()->json(['success' => false, 'message' => "Error getting the contents of your user"]);
+        if( $user->sessionToken->csrf !== $token )
+            return response()->json(['success'=>false,'message'=> "Your session id has expired, please sign in again"]);
 
         $paths = $user->mediaContents()->select('media_path')->get()->toArray();
         $list = [];

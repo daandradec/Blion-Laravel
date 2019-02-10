@@ -10,11 +10,22 @@ use App\User;
 
 trait MediaContentTrait{
 
-    public function profilePicture($id){ // GET
+    public function profilePicture($id,$token){ // GET
+
+        /********* Comprobacion para Incrementar la seguridad *********/
+        $user = User::find($id);
+        if($user == null)
+            return response("Error getting the contents of your user", 404);            
+        if( $user->sessionToken->csrf !== $token )
+            return response("Your session id has expired, please sign in again", 404);            
+        /* ********************* */
+
+
         if(config('app.env') == "local")
             return Storage::response(User::findOrFail($id)->profilePicturePath());
         /** ENV == production **/
         return Storage::disk('s3')->response(User::findOrFail($id)->profilePicturePath());
+
     }
 
     public function postProfilePicture(Request $request, $id){ // POST
@@ -38,8 +49,17 @@ trait MediaContentTrait{
         return response('error sending the data to the server', 404); 
     }
 
-    public function mediaContent(Request $request){ // GET
+    public function mediaContent(Request $request,$id,$token){ // GET
         
+        /********* Comprobacion para Incrementar la seguridad *********/
+        $user = User::find($id);
+        if($user == null)
+            return response("Error getting the contents of your user", 404);            
+        if( $user->sessionToken->csrf !== $token )
+            return response("Your session id has expired, please sign in again", 404);            
+        /* ********************* */
+
+
         if($request->has('path')){
             $path = urldecode($request->path);
             if(config('app.env') == "local")            
