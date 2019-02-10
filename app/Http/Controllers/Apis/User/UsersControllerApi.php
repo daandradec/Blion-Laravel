@@ -31,9 +31,4 @@ class UsersControllerApi extends Controller
         }
         return response()->json(['success' => true,'message'=> $list]); //json_encode($user->mediaContents()->select('media_path')->get())
     }
-
-
-    public function csrf(){
-        return response()->json(['csrf' => csrf_token()]);
-    }
 }

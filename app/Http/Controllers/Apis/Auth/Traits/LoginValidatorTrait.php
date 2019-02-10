@@ -23,6 +23,10 @@ trait LoginValidatorTrait{
             return false;
         }
         $this->message = json_encode($this->reduceUserElloquentCollection($user->toArray()));
+        $this->message["auth_token"] = csrf_token();
+        // si el token no a expirado retornelo
+        // si expiro o es nulo genere otro y guardelo
+
         return true;        
     }
 
