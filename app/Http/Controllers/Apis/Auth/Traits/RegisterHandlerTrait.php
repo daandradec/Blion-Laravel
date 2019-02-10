@@ -45,7 +45,7 @@ trait RegisterHandlerTrait{
             return false;
         }
         $user = $this->create($request->all());
-        $this->message = json_encode($this->reduceUserElloquentCollection($user->toArray()));
+        $this->message = json_encode( $this->insertTokenAuth($this->reduceUserElloquentCollection($user->toArray()),$user) );
         event(new VerifiedEmail($user));
         return true;
     }
@@ -55,6 +55,15 @@ trait RegisterHandlerTrait{
         unset($array['updated_at']);
         return $array;
     }
+
+    private function insertTokenAuth($array,$user){     
+        $token = SessionToken::create(['csrf'=>csrf_token(),'expired'=>Carbon::now()->addDays(1)]);
+        $user->sessionToken()->save($token);        
+        
+        $array["auth_token"] = $token->csrf;
+        $array["expired_date_token"] = Carbon::parse($token->expired)->toDateTimeString();
+        return $array;
+    }    
 }
 
 ?>
