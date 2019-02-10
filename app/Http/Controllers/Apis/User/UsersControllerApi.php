@@ -20,12 +20,16 @@ class UsersControllerApi extends Controller
     }
 
     public function contents($id,$token){
+
+        /********* Comprobacion para Incrementar la seguridad *********/
         $user = User::find($id);
         if($user == null)
             return response()->json(['success' => false, 'message' => "Error getting the contents of your user"]);
-        if( $user->sessionToken->csrf !== $token )
+        if( $user->sessionToken->csrf !== $token ) // || $user->sessionToken->hasExpired()
             return response()->json(['success'=>false,'message'=> "Your session id has expired, please sign in again"]);
-
+         /* ********************* */
+         
+            
         $paths = $user->mediaContents()->select('media_path')->get()->toArray();
         $list = [];
         for($i=0; $i < sizeof($paths);++$i){

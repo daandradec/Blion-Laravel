@@ -13,25 +13,29 @@ trait MediaContentTrait{
     public function profilePicture($id,$token){ // GET
 
         /********* Comprobacion para Incrementar la seguridad *********/
-        $user = User::find($id);
-        if($user == null)
-            return response("Error getting the contents of your user", 404);            
-        if( $user->sessionToken->csrf !== $token )
+        $user = User::findOrFail($id);         
+        if( $user->sessionToken->csrf !== $token ) // || $user->sessionToken->hasExpired()
             return response("Your session id has expired, please sign in again", 404);            
         /* ********************* */
 
 
         if(config('app.env') == "local")
-            return Storage::response(User::findOrFail($id)->profilePicturePath());
+            return Storage::response($user->profilePicturePath());
         /** ENV == production **/
-        return Storage::disk('s3')->response(User::findOrFail($id)->profilePicturePath());
+        return Storage::disk('s3')->response($user->profilePicturePath());
 
     }
 
-    public function postProfilePicture(Request $request, $id){ // POST
+    public function postProfilePicture(Request $request, $id, $token){ // POST
+        
+        /********* Comprobacion para Incrementar la seguridad *********/
+        $user = User::findOrFail($id);         
+        if( $user->sessionToken->csrf !== $token )  // || $user->sessionToken->hasExpired()
+            return response("Your session id has expired, please sign in again", 404);            
+        /* ********************* */
+
 
         if($request->hasFile('mediafile')){
-            $user = User::findOrFail($id);
             $picture = $user->profilePicture;
             if(config('app.env') == "local"){                
                 if(strcmp($picture->profile_picture,"public/Users/no-avatar.jpg"))
@@ -52,10 +56,8 @@ trait MediaContentTrait{
     public function mediaContent(Request $request,$id,$token){ // GET
         
         /********* Comprobacion para Incrementar la seguridad *********/
-        $user = User::find($id);
-        if($user == null)
-            return response("Error getting the contents of your user", 404);            
-        if( $user->sessionToken->csrf !== $token )
+        $user = User::findOrFail($id);         
+        if( $user->sessionToken->csrf !== $token ) // || $user->sessionToken->hasExpired()
             return response("Your session id has expired, please sign in again", 404);            
         /* ********************* */
 
@@ -71,10 +73,15 @@ trait MediaContentTrait{
         return response('error sending the data to the server', 404); 
     }
 
-    public function postMediaContent(Request $request, $id){ // POST
+    public function postMediaContent(Request $request, $id , $token){ // POST
+
+        /********* Comprobacion para Incrementar la seguridad *********/
+        $user = User::findOrFail($id);         
+        if( $user->sessionToken->csrf !== $token ) // || $user->sessionToken->hasExpired()
+            return response("Your session id has expired, please sign in again", 404);            
+        /* ********************* */
 
         if($request->hasFile('mediafile')){
-            $user = User::findOrFail($id);
             $type = $request->file('mediafile')->getMimeType();
             $type = substr($type, 0, strpos($type, "/"));
 
@@ -99,8 +106,15 @@ trait MediaContentTrait{
         return response('error sending the data to the server', 404); 
     }
 
-    public function postDestroyMediaContent(Request $request, $id){
-        $user = User::findOrFail($id);        
+    public function postDestroyMediaContent(Request $request, $id, $token){
+
+        /********* Comprobacion para Incrementar la seguridad *********/
+        $user = User::findOrFail($id);         
+        if( $user->sessionToken->csrf !== $token ) // || $user->sessionToken->hasExpired()
+            return response("Your session id has expired, please sign in again", 404);            
+        /* ********************* */        
+
+        
         if($request->has('path')){
             $path = urldecode($request->input('path'));
             if(config('app.env') == "local")
