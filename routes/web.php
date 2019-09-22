@@ -18,10 +18,6 @@ Route::get('/email/verify','Auth\VerificationController@show')->name('verificati
 Route::get('/email/verify/{id}','Auth\VerificationController@verify')->name('verification.verify'); // la uri que usa el email para verificar
 
 
-Route::get('/admin/login','Web\Admin\AdminLoginController@showLoginForm')->name('admin.login');
-Route::post('/admin/login','Web\Admin\AdminLoginController@login');
-Route::get('/admin/register','Web\Admin\AdminRegisterController@showRegistrationForm')->name('admin.register');
-Route::post('/admin/register','Web\Admin\AdminRegisterController@register');
 
 Route::get('/user/contents','Web\User\UserController@contents')->name('user.contents');
 Route::post('/user/contents/{id}','Web\User\UserController@contentStore')->name('user.contents.store');
