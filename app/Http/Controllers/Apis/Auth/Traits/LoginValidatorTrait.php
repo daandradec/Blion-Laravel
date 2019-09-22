@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Apis\Auth\Traits;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
+use App\SessionToken;
 use App\User;
 
 trait LoginValidatorTrait{
@@ -22,14 +24,28 @@ trait LoginValidatorTrait{
             $this->message = "Wrong Combination";
             return false;
         }
-        $this->message = json_encode($this->reduceUserElloquentCollection($user->toArray()));
+        
+        $this->message = json_encode( $this->insertTokenAuth($this->reduceUserElloquentCollection($user->toArray()),$user) );
+        
         return true;        
     }
 
     private function reduceUserElloquentCollection($array){
-        unset($array["email_verified_at"]);
         unset($array['created_at']);
         unset($array['updated_at']);
+        return $array;
+    }
+
+    private function insertTokenAuth($array,$user){
+        $token = $user->sessionToken;        
+        if(is_null($token)){
+            $token = SessionToken::create(['csrf'=>csrf_token(),'expired'=>Carbon::now()->addDays(1)]);
+            $user->sessionToken()->save($token);
+        }else if(Carbon::now()->gt($token->expired))
+            $token->update(['csrf'=>csrf_token(),'expired'=>Carbon::now()->addDays(1)]);
+        
+        $array["auth_token"] = $token->csrf;
+        $array["expired_date_token"] = Carbon::parse($token->expired)->toDateTimeString();
         return $array;
     }
 
@@ -40,7 +56,7 @@ trait LoginValidatorTrait{
         ])->fails(); //true or false
     }
     private function userExists($user){
-        return $user != null;
+        return !is_null($user);
     }
     private function isRealPassword($password,$encryptPassword){
         return Hash::check($password,$encryptPassword);

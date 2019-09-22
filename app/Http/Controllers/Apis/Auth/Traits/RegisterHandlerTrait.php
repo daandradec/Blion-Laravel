@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Apis\Auth\Traits;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use App\Events\VerifiedEmail;
 use App\ProfilePicture;
 use App\User;
 
@@ -44,16 +45,25 @@ trait RegisterHandlerTrait{
             return false;
         }
         $user = $this->create($request->all());
-        $this->message = json_encode($this->reduceUserElloquentCollection($user->toArray()));
+        $this->message = json_encode( $this->insertTokenAuth($this->reduceUserElloquentCollection($user->toArray()),$user) );
+        event(new VerifiedEmail($user));
         return true;
     }
 
     private function reduceUserElloquentCollection($array){
-        unset($array["email_verified_at"]);
         unset($array['created_at']);
         unset($array['updated_at']);
         return $array;
     }
+
+    private function insertTokenAuth($array,$user){     
+        $token = SessionToken::create(['csrf'=>csrf_token(),'expired'=>Carbon::now()->addDays(1)]);
+        $user->sessionToken()->save($token);        
+        
+        $array["auth_token"] = $token->csrf;
+        $array["expired_date_token"] = Carbon::parse($token->expired)->toDateTimeString();
+        return $array;
+    }    
 }
 
 ?>

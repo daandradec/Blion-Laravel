@@ -10,17 +10,32 @@ use App\User;
 
 trait MediaContentTrait{
 
-    public function profilePicture($id){ // GET
+    public function profilePicture($id,$token){ // GET
+
+        /********* Comprobacion para Incrementar la seguridad *********/ // para ver si se puede llevar a un metodo tocaria ver si se puede ejecutar una funcion antes que cualquier metodo de aqui
+        $user = User::findOrFail($id);         
+        if( $user->sessionToken->csrf !== $token ) // || $user->sessionToken->hasExpired()
+            return response("Your session id has expired, please sign in again", 404);            
+        /* ********************* */
+
+
         if(config('app.env') == "local")
-            return Storage::response(User::findOrFail($id)->profilePicturePath());
+            return Storage::response($user->profilePicturePath());
         /** ENV == production **/
-        return Storage::disk('s3')->response(User::findOrFail($id)->profilePicturePath());
+        return Storage::disk('s3')->response($user->profilePicturePath());
+
     }
 
-    public function postProfilePicture(Request $request, $id){ // POST
+    public function postProfilePicture(Request $request, $id, $token){ // POST
+        
+        /********* Comprobacion para Incrementar la seguridad *********/
+        $user = User::findOrFail($id);         
+        if( $user->sessionToken->csrf !== $token )  // || $user->sessionToken->hasExpired()
+            return response("Your session id has expired, please sign in again", 404);            
+        /* ********************* */
+
 
         if($request->hasFile('mediafile')){
-            $user = User::findOrFail($id);
             $picture = $user->profilePicture;
             if(config('app.env') == "local"){                
                 if(strcmp($picture->profile_picture,"public/Users/no-avatar.jpg"))
@@ -38,8 +53,15 @@ trait MediaContentTrait{
         return response('error sending the data to the server', 404); 
     }
 
-    public function mediaContent(Request $request){ // GET
+    public function mediaContent(Request $request,$id,$token){ // GET
         
+        /********* Comprobacion para Incrementar la seguridad *********/
+        $user = User::findOrFail($id);         
+        if( $user->sessionToken->csrf !== $token ) // || $user->sessionToken->hasExpired()
+            return response("Your session id has expired, please sign in again", 404);            
+        /* ********************* */
+
+
         if($request->has('path')){
             $path = urldecode($request->path);
             if(config('app.env') == "local")            
@@ -51,10 +73,15 @@ trait MediaContentTrait{
         return response('error sending the data to the server', 404); 
     }
 
-    public function postMediaContent(Request $request, $id){ // POST
+    public function postMediaContent(Request $request, $id , $token){ // POST
+
+        /********* Comprobacion para Incrementar la seguridad *********/
+        $user = User::findOrFail($id);         
+        if( $user->sessionToken->csrf !== $token ) // || $user->sessionToken->hasExpired()
+            return response("Your session id has expired, please sign in again", 404);            
+        /* ********************* */
 
         if($request->hasFile('mediafile')){
-            $user = User::findOrFail($id);
             $type = $request->file('mediafile')->getMimeType();
             $type = substr($type, 0, strpos($type, "/"));
 
@@ -73,13 +100,21 @@ trait MediaContentTrait{
                 if($type == "video")
                     $user->mediaContents()->create(['media_path'=> $path,'media_type'=>'video']);                
             }
+            return response()->json(['success' => true,'message' => urlencode($path)]);  
         }
             
         return response('error sending the data to the server', 404); 
     }
 
-    public function postDestroyMediaContent(Request $request, $id){
-        $user = User::findOrFail($id);        
+    public function postDestroyMediaContent(Request $request, $id, $token){
+
+        /********* Comprobacion para Incrementar la seguridad *********/
+        $user = User::findOrFail($id);         
+        if( $user->sessionToken->csrf !== $token ) // || $user->sessionToken->hasExpired()
+            return response("Your session id has expired, please sign in again", 404);            
+        /* ********************* */        
+
+        
         if($request->has('path')){
             $path = urldecode($request->input('path'));
             if(config('app.env') == "local")
