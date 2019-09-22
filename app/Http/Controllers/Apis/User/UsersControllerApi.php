@@ -19,14 +19,14 @@ class UsersControllerApi extends Controller
         return response()->json(['success' => true,'message'=>json_encode($user->toArray())]);
     }
 
-    public function contents($id,$token){
+    public function contents($id){
 
         /********* Comprobacion para Incrementar la seguridad *********/
         $user = User::find($id);
         if($user == null)
             return response()->json(['success' => false, 'message' => "Error getting the contents of your user"]);
-        if( $user->sessionToken->csrf !== $token ) // || $user->sessionToken->hasExpired()
-            return response()->json(['success'=>false,'message'=> "Your session id has expired, please sign in again"]);
+        //if( $user->sessionToken->csrf !== $token ) // || $user->sessionToken->hasExpired()
+        //    return response()->json(['success'=>false,'message'=> "Your session id has expired, please sign in again"]);
          /* ********************* */
          
             

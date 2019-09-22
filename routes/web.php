@@ -34,14 +34,14 @@ Route::get('/user/{id}/delete','Web\User\UserController@delete');
 
 /** User */
 Route::get('/api/users/{id}','Apis\User\UsersControllerApi@index');
-Route::get('/api/users/{id}/{token}/contents','Apis\User\UsersControllerApi@contents');
-Route::get('/api/users/{id}/{token}/mediacontent/media','Apis\User\UsersControllerApi@mediaContent');
-Route::get('/api/users/{id}/{token}/image','Apis\User\UsersControllerApi@profilePicture');
-Route::post('/api/users/{id}/{token}/image','Apis\User\UsersControllerApi@postProfilePicture');
+Route::get('/api/users/{id}/contents','Apis\User\UsersControllerApi@contents');
+Route::get('/api/users/{id}/mediacontent/media','Apis\User\UsersControllerApi@mediaContent');
+Route::get('/api/users/{id}/image','Apis\User\UsersControllerApi@profilePicture');
+Route::post('/api/users/{id}/image','Apis\User\UsersControllerApi@postProfilePicture');
 
 /* Media Contents REST*/
-Route::post('api/users/{id}/{token}/mediacontent/media','Apis\User\UsersControllerApi@postMediaContent');
-Route::post('api/users/{id}/{token}/mediacontent/destroy','Apis\User\UsersControllerApi@postDestroyMediaContent');
+Route::post('api/users/{id}/mediacontent/media','Apis\User\UsersControllerApi@postMediaContent');
+Route::post('api/users/{id}/mediacontent/destroy','Apis\User\UsersControllerApi@postDestroyMediaContent');
 
 /** Login */
 Route::post('/api/login','Apis\Auth\LoginControllerApi@login');

@@ -43,9 +43,6 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(MediaContents::class);
     }
 
-    public function sessionToken(){
-        return $this->hasOne(SessionToken::class);
-    }
 
 
     // sobrescribiendo trait de vendor/laravel/framework/Illuminate\Auth/MustVerifyEmail
