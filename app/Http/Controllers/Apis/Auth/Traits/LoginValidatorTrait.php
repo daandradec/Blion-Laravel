@@ -25,7 +25,7 @@ trait LoginValidatorTrait{
             return false;
         }
         
-        $this->message = json_encode( $this->insertTokenAuth($this->reduceUserElloquentCollection($user->toArray()),$user) );
+        $this->message = json_encode( $this->reduceUserElloquentCollection($user->toArray()) );
         
         return true;        
     }
@@ -36,6 +36,7 @@ trait LoginValidatorTrait{
         return $array;
     }
 
+    /*
     private function insertTokenAuth($array,$user){
         $token = $user->sessionToken;        
         if(is_null($token)){
@@ -47,7 +48,7 @@ trait LoginValidatorTrait{
         $array["auth_token"] = $token->csrf;
         $array["expired_date_token"] = Carbon::parse($token->expired)->toDateTimeString();
         return $array;
-    }
+    }*/
 
     private function requestValidated($request){
         return ! Validator::make($request->all(), [
