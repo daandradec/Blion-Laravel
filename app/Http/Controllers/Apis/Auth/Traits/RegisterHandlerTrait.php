@@ -4,12 +4,39 @@ namespace App\Http\Controllers\Apis\Auth\Traits;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use App\Repositories\ApiHelpers;
 use App\Events\VerifiedEmail;
 use App\ProfilePicture;
 use App\User;
 
 trait RegisterHandlerTrait{
 
+    use ApiHelpers;
+
+    /* METODO PARA REALIZAR EL REGISTRO DEL USUARIO VALIDANDO Y CREANDO AL USUARIO */
+    private function registration($request){
+        $validator = $this->validator($request->all());
+
+        if($validator->fails()){            
+            $this->responseStatusMessage($validator->errors()->first(), 404);     
+            return false;
+        }
+
+        $user = $this->create($request->all());
+        $this->prepareResponse($request, $user);
+        event(new VerifiedEmail($user));
+        
+        return true;
+    }
+
+    /* METODO PARA GUARDAR EL USUARIO Y PREPARAR LA RESPUESTA */
+    private function prepareResponse($request, $user){        
+        $token = auth('api')->attempt(request(['email', 'password']));
+        $expired = auth('api')->factory()->getTTL() * 60;        
+        $this->responseStatusMessage(json_encode( $this->appendFields($this->reduceElloquentCollection($user->toArray()),["token","expired_date_token"],[$token,$expired])), 200);
+    }
+
+    /* METODO PARA CREAR AL USUARIO JUNTO CON SU IMAGEN DE PERFIL */
     private function create(array $data){
         $user = User::create([
             'name' => $data['name'],
@@ -26,6 +53,8 @@ trait RegisterHandlerTrait{
         $user->profilePicture()->save($picture);
         return $user;
     }
+
+    /* VALIDADOR DEL USUARIO */
     private function validator(array $data){
         return Validator::make($data, [
             'name' => 'required|string|max:255',
@@ -36,36 +65,6 @@ trait RegisterHandlerTrait{
     private function userAlreadyExists($email){
         return User::where('email','=',$email)->first() != null;
     }
-
-    private function registration($request){
-        $validator = $this->validator($request->all());
-
-        if($validator->fails()){
-            $this->message = $validator->errors()->first();
-            return false;
-        }
-        $user = $this->create($request->all());
-        //$this->message = json_encode( $this->insertTokenAuth($this->reduceUserElloquentCollection($user->toArray()),$user) );
-        $this->message = json_encode( $this->reduceUserElloquentCollection($user->toArray()) );
-        event(new VerifiedEmail($user));
-        return true;
-    }
-
-    private function reduceUserElloquentCollection($array){
-        unset($array['created_at']);
-        unset($array['updated_at']);
-        return $array;
-    }
-
-    /*
-    private function insertTokenAuth($array,$user){     
-        $token = SessionToken::create(['csrf'=>csrf_token(),'expired'=>Carbon::now()->addDays(1)]);
-        $user->sessionToken()->save($token);        
-        
-        $array["auth_token"] = $token->csrf;
-        $array["expired_date_token"] = Carbon::parse($token->expired)->toDateTimeString();
-        return $array;
-    }    */
 }
 
 ?>

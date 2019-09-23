@@ -4,51 +4,39 @@ namespace App\Http\Controllers\Apis\Auth\Traits;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use App\Repositories\ApiHelpers;
 use Carbon\Carbon;
 use App\SessionToken;
 use App\User;
 
 trait LoginValidatorTrait{
 
+    use ApiHelpers;
+
     private function loginRequestValidated($request){
         if(!$this->requestValidated($request)){
-            $this->message = "The inputs fields are required";
-            return false;
-        }
-        $user = User::where('email', $request->email)->first();
-        if(!$this->userExists($user)){
-            $this->message = "Wrong Combination";
-            return false;
-        }
-        if(!$this->isRealPassword($request->password,$user->password)){
-            $this->message = "Wrong Combination";
+            $this->responseStatusMessage("The inputs fields are required", 404);            
             return false;
         }
         
-        $this->message = json_encode( $this->reduceUserElloquentCollection($user->toArray()) );
+        $user = User::where('email', $request->email)->first();
+        if(!$this->userExists($user)){
+            $this->responseStatusMessage("Wrong Combination", 404);
+            return false;
+        }
+
+        if(!$this->isRealPassword($request->password,$user->password)){
+            $this->responseStatusMessage("Wrong Combination", 404);            
+            return false;
+        }
+
+        $token = auth('api')->attempt(request(['email', 'password']));
+        $expired = auth('api')->factory()->getTTL() * 60;
+                  
+        $this->responseStatusMessage(json_encode( $this->appendFields($this->reduceElloquentCollection($user->toArray()),["token","expired_date_token"],[$token,$expired])), 200);
         
         return true;        
     }
-
-    private function reduceUserElloquentCollection($array){
-        unset($array['created_at']);
-        unset($array['updated_at']);
-        return $array;
-    }
-
-    /*
-    private function insertTokenAuth($array,$user){
-        $token = $user->sessionToken;        
-        if(is_null($token)){
-            $token = SessionToken::create(['csrf'=>csrf_token(),'expired'=>Carbon::now()->addDays(1)]);
-            $user->sessionToken()->save($token);
-        }else if(Carbon::now()->gt($token->expired))
-            $token->update(['csrf'=>csrf_token(),'expired'=>Carbon::now()->addDays(1)]);
-        
-        $array["auth_token"] = $token->csrf;
-        $array["expired_date_token"] = Carbon::parse($token->expired)->toDateTimeString();
-        return $array;
-    }*/
 
     private function requestValidated($request){
         return ! Validator::make($request->all(), [

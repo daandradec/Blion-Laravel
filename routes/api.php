@@ -22,21 +22,32 @@ use Illuminate\Http\Request;
 
 /* APIS */
 
+Route::middleware("auth.jwt")->group(function(){
+    /** USER */
+    Route::get('users/{id}/contents','Apis\User\UsersControllerApi@contents');
+    /* PROFILE PICTURE */
+    Route::post('users/{id}/image','Apis\User\UsersControllerApi@postProfilePicture');
+    /* Media Contents REST*/
+    Route::post('users/{id}/mediacontent/media','Apis\User\UsersControllerApi@postMediaContent');
+    Route::post('users/{id}/mediacontent/destroy','Apis\User\UsersControllerApi@postDestroyMediaContent');
+    /* LOGIN */
+    Route::post('logout', 'Apis\Auth\LogoutControllerApi@logout');
+});
+
+
 /** USER */
 Route::get('users/{id}','Apis\User\UsersControllerApi@index');
-Route::get('users/{id}/contents','Apis\User\UsersControllerApi@contents');
 
 /* PROFILE PICTURE */
 Route::get('users/{id}/image','Apis\User\UsersControllerApi@profilePicture');
-Route::post('users/{id}/image','Apis\User\UsersControllerApi@postProfilePicture');
 
 /* Media Contents REST*/
 Route::get('users/{id}/mediacontent/media','Apis\User\UsersControllerApi@mediaContent');
-Route::post('users/{id}/mediacontent/media','Apis\User\UsersControllerApi@postMediaContent');
-Route::post('users/{id}/mediacontent/destroy','Apis\User\UsersControllerApi@postDestroyMediaContent');
+
 
 /** Login */
-Route::post('login','Apis\Auth\LoginControllerApi@login');
-Route::post('register','Apis\Auth\RegisterControllerApi@register');
+Route::post('login', 'Apis\Auth\LoginControllerApi@login');
+Route::post('register', 'Apis\Auth\RegisterControllerApi@register');
+Route::post('token/refresh', 'Apis\Auth\RefreshTokenControllerApi@refresh');
 
 /** ********************** **/
