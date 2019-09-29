@@ -12,12 +12,7 @@ trait MediaContentTrait{
 
     public function profilePicture($id){ // GET
 
-        /********* Comprobacion para Incrementar la seguridad *********/ // para ver si se puede llevar a un metodo tocaria ver si se puede ejecutar una funcion antes que cualquier metodo de aqui
         $user = User::findOrFail($id);         
-        //if( $user->sessionToken->csrf !== $token ) // || $user->sessionToken->hasExpired()
-        //    return response("Your session id has expired, please sign in again", 404);            
-        /* ********************* */
-
 
         if(config('app.env') == "local")
             return Storage::response($user->profilePicturePath());
@@ -28,12 +23,8 @@ trait MediaContentTrait{
 
     public function postProfilePicture(Request $request, $id){ // POST
         
-        /********* Comprobacion para Incrementar la seguridad *********/
         $user = User::findOrFail($id);         
-        //if( $user->sessionToken->csrf !== $token )  // || $user->sessionToken->hasExpired()
-        //    return response("Your session id has expired, please sign in again", 404);            
-        /* ********************* */
-
+        $this->authorize('execute', $user);
 
         if($request->hasFile('mediafile')){
             $picture = $user->profilePicture;
@@ -55,12 +46,7 @@ trait MediaContentTrait{
 
     public function mediaContent(Request $request,$id){ // GET
         
-        /********* Comprobacion para Incrementar la seguridad *********/
         $user = User::findOrFail($id);         
-        //if( $user->sessionToken->csrf !== $token ) // || $user->sessionToken->hasExpired()
-        //    return response("Your session id has expired, please sign in again", 404);            
-        /* ********************* */
-
 
         if($request->has('path')){
             $path = urldecode($request->path);
@@ -75,11 +61,8 @@ trait MediaContentTrait{
 
     public function postMediaContent(Request $request, $id){ // POST
 
-        /********* Comprobacion para Incrementar la seguridad *********/
-        $user = User::findOrFail($id);         
-        //if( $user->sessionToken->csrf !== $token ) // || $user->sessionToken->hasExpired()
-        //    return response("Your session id has expired, please sign in again", 404);            
-        /* ********************* */
+        $user = User::findOrFail($id);    
+        $this->authorize('execute', $user);     
 
         if($request->hasFile('mediafile')){
             $type = $request->file('mediafile')->getMimeType();
@@ -107,13 +90,9 @@ trait MediaContentTrait{
     }
 
     public function postDestroyMediaContent(Request $request, $id){
-
-        /********* Comprobacion para Incrementar la seguridad *********/
-        $user = User::findOrFail($id);         
-        //if( $user->sessionToken->csrf !== $token ) // || $user->sessionToken->hasExpired()
-        //    return response("Your session id has expired, please sign in again", 404);            
-        /* ********************* */        
-
+        
+        $user = User::findOrFail($id);  
+        $this->authorize('execute', $user);            
         
         if($request->has('path')){
             $path = urldecode($request->input('path'));
